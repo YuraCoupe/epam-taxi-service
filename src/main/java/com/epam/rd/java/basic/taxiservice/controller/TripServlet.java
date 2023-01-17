@@ -25,13 +25,12 @@ import java.util.*;
 public class TripServlet extends HttpServlet {
     private TripService tripService;
     private UserService userService;
-    private AddressService addressService;
     private StreetService streetService;
     private CarService carService;
     private TripStatusService tripStatusService;
     private CarStatusService carStatusService;
     private CarCategoryService categoryService;
-    private DistanceService distanceService;
+    private BingMapsService bingMapsService;
 
     private TripValidator validator;
 
@@ -44,7 +43,6 @@ public class TripServlet extends HttpServlet {
                 util.getSchema(), util.getUser(), util.getPassword(), util.getJdbcDriver());
         TripRepository tripRepository = new TripRepository(dbConnector);
         UserRepository userRepository = new UserRepository(dbConnector);
-        AddressRepository addressRepository = new AddressRepository(dbConnector);
         StreetRepository streetRepository = new StreetRepository(dbConnector);
         TripStatusRepository tripStatusRepository = new TripStatusRepository(dbConnector);
         CarCategoryRepository categoryRepository = new CarCategoryRepository(dbConnector);
@@ -52,14 +50,14 @@ public class TripServlet extends HttpServlet {
         CarRepository carRepository = new CarRepository(dbConnector);
         this.userService = new UserService(userRepository);
         this.tripService = new TripService(tripRepository, carRepository);
-        this.addressService = new AddressService(addressRepository);
         this.streetService = new StreetService(streetRepository);
         this.tripStatusService = new TripStatusService(tripStatusRepository);
         this.categoryService = new CarCategoryService(categoryRepository);
         this.carStatusService = new CarStatusService(carStatusRepository);
         this.carService = new CarService(carRepository);
-        this.validator = new TripValidator(tripRepository, addressRepository, categoryRepository);
-        this.distanceService = new DistanceService();
+        this.bingMapsService = new BingMapsService();
+        this.validator = new TripValidator(tripRepository, categoryRepository, bingMapsService);
+
     }
 
     @Override
@@ -111,11 +109,6 @@ public class TripServlet extends HttpServlet {
         Integer tripId = null;
         Trip trip = new Trip();
 
-        if (req.getParameter("destinationAddressId") == null || req.getParameter("departureAddressId") == null) {
-            handleNew(req, resp);
-            return;
-        }
-
         if (!req.getParameter("tripId").isBlank()) {
             tripId = Integer.parseInt(req.getParameter("tripId"));
             trip.setId(tripId);
@@ -160,22 +153,21 @@ public class TripServlet extends HttpServlet {
         }
 
         User user = userService.findById(userId);
-        Integer departureAddressId = Integer.parseInt(req.getParameter("departureAddressId"));
-        Address departureAddress = addressService.findById(departureAddressId);
-        Integer destinationAddressId = Integer.parseInt(req.getParameter("destinationAddressId"));
-        Address destinationAddress = addressService.findById(destinationAddressId);
+        String departureAddress = req.getParameter("departureAddress");
+        String destinationAddress = req.getParameter("destinationAddress");
         Integer numberOfPassengers = Integer.parseInt(req.getParameter("passengersNumber"));
         Integer categoryId = Integer.parseInt(req.getParameter("categoryId"));
         CarCategory category = categoryService.findById(categoryId);
         TripStatus status = tripStatusService.findByTitle("Open");
         trip.setUser(user);
-        trip.setDepartureAddress(departureAddress);
-        trip.setDestinationAddress(destinationAddress);
+
         trip.setNumberOfPassengers(numberOfPassengers);
         trip.setCategory(category);
         trip.setStatus(status);
-        Double distance = distanceService.getDistance(trip);
-        trip.setDistance(distance);
+        BingRoute bingRoute = bingMapsService.getRoute(departureAddress, destinationAddress);
+        trip.setDepartureAddress(bingRoute.getStartLocation());
+        trip.setDestinationAddress(bingRoute.getEndLocation());
+        trip.setDistance(bingRoute.getTravelDistance());
         Double price = 200.00;
         trip.setPrice(price);
         trip.setOpenTime(new Timestamp(System.currentTimeMillis()));
@@ -293,33 +285,8 @@ public class TripServlet extends HttpServlet {
 
     private void handleNew(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Trip trip = new Trip();
-        Address departureAddress = new Address();
-        Street departureStreet = new Street();
-        departureAddress.setStreet(departureStreet);
-        Address destinationAddress = new Address();
-        Street destinationStreet = new Street();
-        destinationAddress.setStreet(destinationStreet);
-        trip.setDepartureAddress(departureAddress);
-        trip.setDestinationAddress(destinationAddress);
-
-        if (req.getParameter("departureStreetId") != null) {
-            Integer departureStreetId = Integer.parseInt(req.getParameter("departureStreetId"));
-            departureStreet = streetService.findById(departureStreetId);
-            trip.getDepartureAddress().getStreet().setId(departureStreetId);
-            List<Address> departureAddressBuildings = addressService.findByStreet(departureStreet.getStreetType(), departureStreet.getTitle());
-            req.setAttribute("departureAddresses", departureAddressBuildings);
-        }
-        if (req.getParameter("destinationStreetId") != null) {
-            Integer destinationStreetId = Integer.parseInt(req.getParameter("destinationStreetId"));
-            destinationStreet = streetService.findById(destinationStreetId);
-            trip.getDestinationAddress().getStreet().setId(destinationStreetId);
-            List<Address> destinationAddressBuildings = addressService.findByStreet(destinationStreet.getStreetType(), destinationStreet.getTitle());
-            req.setAttribute("destinationAddresses", destinationAddressBuildings);
-        }
 
         req.setAttribute("trip", trip);
-        List<Street> streets = streetService.findAll();
-        req.setAttribute("streets", streets);
         List<CarCategory> categories = categoryService.findAll();
         req.setAttribute("categories", categories);
         req.setCharacterEncoding("UTF-8");

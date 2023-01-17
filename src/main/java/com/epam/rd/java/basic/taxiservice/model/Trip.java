@@ -10,8 +10,8 @@ import java.util.Set;
 public class Trip {
     private Integer id;
     private User user;
-    private Address departureAddress;
-    private Address destinationAddress;
+    private String departureAddress;
+    private String destinationAddress;
     private Integer numberOfPassengers;
     private CarCategory category;
     private Double price;
@@ -37,19 +37,19 @@ public class Trip {
         this.user = user;
     }
 
-    public Address getDepartureAddress() {
+    public String getDepartureAddress() {
         return departureAddress;
     }
 
-    public void setDepartureAddress(Address departureAddress) {
+    public void setDepartureAddress(String departureAddress) {
         this.departureAddress = departureAddress;
     }
 
-    public Address getDestinationAddress() {
+    public String getDestinationAddress() {
         return destinationAddress;
     }
 
-    public void setDestinationAddress(Address destinationAddress) {
+    public void setDestinationAddress(String destinationAddress) {
         this.destinationAddress = destinationAddress;
     }
 

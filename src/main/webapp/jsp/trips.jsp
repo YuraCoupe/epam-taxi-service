@@ -63,14 +63,10 @@
                             <c:out value="${trip.user.lastName}"/>
                         </td>
                         <td>
-                            <c:out value="${trip.departureAddress.building}"/>
-                            <c:out value="${trip.departureAddress.street.title}"/>
-                            <c:out value="${trip.departureAddress.street.streetType}"/>
+                            <c:out value="${trip.departureAddress}"/>
                         </td>
                         <td>
-                            <c:out value="${trip.destinationAddress.building}"/>
-                            <c:out value="${trip.destinationAddress.street.title}"/>
-                            <c:out value="${trip.destinationAddress.street.streetType}"/>
+                            <c:out value="${trip.destinationAddress}"/>
                         </td>
                         <td>
                             <c:out value="${trip.price}"/>

@@ -1,50 +1,57 @@
 package com.epam.rd.java.basic.taxiservice.service;
 
-import com.epam.rd.java.basic.taxiservice.config.PropertiesUtil;
-import com.epam.rd.java.basic.taxiservice.model.Address;
+import com.epam.rd.java.basic.taxiservice.model.BingRoute;
+import com.epam.rd.java.basic.taxiservice.model.ErrorMessage;
 import com.epam.rd.java.basic.taxiservice.model.Trip;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
 
-public class DistanceService {
+public class BingMapsService {
     private static final String BASIC_REQUEST_STRING =
             "http://dev.virtualearth.net/REST/V1/Routes/Driving?wp.0=%s&wp.1=%s&avoid=minimizeTolls&key=%s";
     private final HttpClient CLIENT = HttpClient.newHttpClient();
 
-    public Double getDistance(Trip trip) {
+    public BingRoute getRoute(String departureAddress, String destinationAddress) {
+        BingRoute bingRoute = new BingRoute();
 
-        String departureAddressString = addressToString(trip.getDepartureAddress());
-        String destinationAddressString = addressToString(trip.getDestinationAddress());
-        String requestString = prepareRequest(departureAddressString, destinationAddressString);
+        String requestString = prepareRequest(departureAddress, destinationAddress);
         HttpResponse<String> response = getJSONResponse(requestString);
-        Double distance = 0.0;
+        JSONObject jsonObject = new JSONObject(response.body());
+        bingRoute.setStatusCode(jsonObject.getInt("statusCode"));
         if (response.statusCode() == 200) {
-            JSONObject jsonObject = new JSONObject(response.body());
             JSONArray resourseSets = jsonObject.getJSONArray("resourceSets");
             JSONObject resourseSet = resourseSets.getJSONObject(0);
             JSONObject route = resourseSet.getJSONArray("resources").getJSONObject(0);
-            distance = route.getDouble("travelDistance");
+            bingRoute.setTravelDistance(route.getDouble("travelDistance"));
             JSONArray routeLegs = route.getJSONArray("routeLegs");
             JSONObject routeLeg = routeLegs.getJSONObject(0);
             JSONObject startLocation = routeLeg.getJSONObject("startLocation");
             JSONObject startLocationAddress = startLocation.getJSONObject("address");
-            String startLocationFormattedAddress = startLocationAddress.getString("formattedAddress");
+            bingRoute.setStartLocation(startLocationAddress.getString("formattedAddress"));
             JSONObject endLocation = routeLeg.getJSONObject("endLocation");
             JSONObject endLocationAddress = endLocation.getJSONObject("address");
-            String endLocationFormattedAddress = endLocationAddress.getString("formattedAddress");
-            System.out.println(distance);
-            System.out.println("Start: " + startLocationFormattedAddress);
-            System.out.println("End: " + endLocationFormattedAddress);
+            bingRoute.setEndLocation(endLocationAddress.getString("formattedAddress"));
         }
-        return distance;
+        if (response.statusCode() == 404) {
+            JSONArray errorDetails = jsonObject.getJSONArray("errorDetails");
+            ErrorMessage errorMessage = new ErrorMessage();
+            List<String> errors = new ArrayList<>();
+            errorMessage.setErrors(errors);
+
+            for (int i = 0; i < errorDetails.length(); i++) {
+                errorMessage.getErrors().add(errorDetails.getString(i));
+            }
+            bingRoute.setErrorMessage(errorMessage);
+        }
+        return bingRoute;
     }
 
     private HttpResponse<String> getJSONResponse(String requestString) {
@@ -64,13 +71,6 @@ public class DistanceService {
             e.printStackTrace();
         }
         return response;
-    }
-
-    private String addressToString (Address address) {
-        return String.format("%s %s %s Kyiv",
-                address.getStreet().getTitle(),
-                address.getStreet().getStreetType(),
-                address.getBuilding());
     }
 
     private String prepareRequest(String departureAddressString, String destinationAddressString) {

@@ -34,13 +34,11 @@
                     <div class="card-body">
                         <h5 class="card-title"><fmt:message key="label.trip.confirmed"/></h5>
                         <p class="card-text"><fmt:message key="label.trip.departure.address"/></p>
-                        <c:out value="${trip.departureAddress.building}"/>
-                        <c:out value="${trip.departureAddress.street.title}"/>
-                        <c:out value="${trip.departureAddress.street.streetType}"/><br><br>
+                        <c:out value="${trip.departureAddress}"/><br><br>
                         <p class="card-text"><fmt:message key="label.trip.destination.address"/></p>
-                        <c:out value="${trip.destinationAddress.building}"/>
-                        <c:out value="${trip.destinationAddress.street.title}"/>
-                        <c:out value="${trip.destinationAddress.street.streetType}"/><br><br>
+                        <c:out value="${trip.destinationAddress}"/><br><br>
+                        <p class="card-text"><fmt:message key="label.trip.distance"/></p>
+                        <c:out value="${trip.distance} km"/><br><br>
                         <p class="card-text"><fmt:message key="label.trip.category"/></p>
                         <c:out value="${trip.category.title}"/><br><br>
                         <p class="card-text"><fmt:message key="label.trip.passengers.number"/></p>
