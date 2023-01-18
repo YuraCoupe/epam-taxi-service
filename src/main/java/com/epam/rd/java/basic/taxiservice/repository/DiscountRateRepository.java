@@ -1,9 +1,9 @@
 package com.epam.rd.java.basic.taxiservice.repository;
 
 import com.epam.rd.java.basic.taxiservice.config.DatabaseManager;
-import com.epam.rd.java.basic.taxiservice.model.Car.CarCategory;
-import com.epam.rd.java.basic.taxiservice.model.PriceRate;
+import com.epam.rd.java.basic.taxiservice.model.DiscountRate;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,26 +11,24 @@ import java.util.Optional;
 
 public class DiscountRateRepository {
     private static final String INSERT =
-            "INSERT INTO price_rate (category_id, rate, min_order_price)\n" +
+            "INSERT INTO discount_rate (money_spent, discount)\n" +
                     "VALUES\n" +
                     "(?, ?, ?);";
-    private static final String UPDATE = "UPDATE price_rate SET category_id = ?, rate = ?, min_order_price = ? WHERE id = ?;";
+    private static final String UPDATE = "UPDATE discount_rate SET money_spent = ?, discount = ? WHERE id = ?;";
     private static final String FIND_ALL =
-            "SELECT id, category_id, c.title AS category_title, rate, min_order_price\n" +
-                    "FROM price_rate\n" +
-                    "JOIN car_category ON category_id = c.id\n" +
-                    "ORDER BY category_id;";
-    private static final String DELETE = "DELETE FROM price_rate WHERE id = ?;";
+            "SELECT id, money_spent, discount\n" +
+                    "FROM discount_rate\n" +
+                    "ORDER BY id;";
+    private static final String DELETE = "DELETE FROM discount_rate WHERE id = ?;";
     private static final String FIND_BY_ID =
-            "SELECT id, category_id, c.title AS category_title, rate, min_order_price\n" +
-                    "FROM price_rate\n" +
-                    "JOIN car_category ON category_id = c.id\n" +
+            "SELECT id, money_spent, discount\n" +
+                    "FROM discount_rate\n" +
                     "WHERE id = ?";
-    private static final String FIND_BY_CATEGORY =
-            "SELECT id, category_id, c.title AS category_title, rate, min_order_price\n" +
-                    "FROM price_rate\n" +
-                    "JOIN car_category ON category_id = c.id\n" +
-                    "WHERE c.title = ?";
+    private static final String FIND_BY_MONEY_SPENT =
+            "SELECT id, MAX(money_spent) AS total_spent, discount\n" +
+                    "FROM discount_rate\n" +
+                    "WHERE money_spent = (SELECT MAX(money_spent) FROM discount_rate WHERE money_spent <= ?)\n" +
+                    "GROUP BY id;";
 
     private final DatabaseManager databaseManager;
 
@@ -38,10 +36,10 @@ public class DiscountRateRepository {
         this.databaseManager = databaseManager;
     }
 
-    public Optional<PriceRate> findByCategory(String category) {
+    public Optional<DiscountRate> findByMoneySpent(BigDecimal moneySpent) {
         try (Connection connection = databaseManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_CATEGORY)) {
-            preparedStatement.setString(1, category);
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_MONEY_SPENT)) {
+            preparedStatement.setBigDecimal(1, moneySpent);
             ResultSet resultSet = preparedStatement.executeQuery();
             return mapToOne(resultSet);
         } catch (SQLException throwables) {
@@ -50,12 +48,11 @@ public class DiscountRateRepository {
         return Optional.empty();
     }
 
-    public Integer save(PriceRate priceRate) {
+    public Integer save(DiscountRate discountRate) {
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setInt(1, priceRate.getCategory().getId());
-            preparedStatement.setBigDecimal(2, priceRate.getRate());
-            preparedStatement.setBigDecimal(3, priceRate.getMinOrderPrice());
+            preparedStatement.setBigDecimal(1, discountRate.getMoneySpent());
+            preparedStatement.setInt(2, discountRate.getDiscountRate());
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();
@@ -67,30 +64,29 @@ public class DiscountRateRepository {
         return null;
     }
 
-    public void update(PriceRate priceRate) {
+    public void update(DiscountRate discountRate) {
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
-            preparedStatement.setInt(1, priceRate.getCategory().getId());
-            preparedStatement.setBigDecimal(2, priceRate.getRate());
-            preparedStatement.setBigDecimal(3, priceRate.getMinOrderPrice());
-            preparedStatement.setInt(4, priceRate.getId());
+            preparedStatement.setBigDecimal(1, discountRate.getMoneySpent());
+            preparedStatement.setInt(2, discountRate.getDiscountRate());
+            preparedStatement.setInt(3, discountRate.getId());
             preparedStatement.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
-    public void delete(PriceRate priceRate) {
+    public void delete(DiscountRate discountRate) {
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE)) {
-            preparedStatement.setInt(1, priceRate.getId());
+            preparedStatement.setInt(1, discountRate.getId());
             preparedStatement.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
-    public List<PriceRate> findAll() {
+    public List<DiscountRate> findAll() {
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL)) {
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -101,7 +97,7 @@ public class DiscountRateRepository {
         return new ArrayList<>();
     }
 
-    public Optional<PriceRate> findById(Integer id) {
+    public Optional<DiscountRate> findById(Integer id) {
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID)) {
             preparedStatement.setLong(1, id);
@@ -113,32 +109,28 @@ public class DiscountRateRepository {
         return Optional.empty();
     }
 
-    private Optional<PriceRate> mapToOne(ResultSet resultSet) throws SQLException {
-        PriceRate priceRate = null;
+    private Optional<DiscountRate> mapToOne(ResultSet resultSet) throws SQLException {
+        DiscountRate discountRate = null;
         while (resultSet.next()) {
-            priceRate = getCarStatusFromResultSet(resultSet);
+            discountRate = getEntityFromResultSet(resultSet);
         }
-        return Optional.ofNullable(priceRate);
+        return Optional.ofNullable(discountRate);
     }
 
-    private List<PriceRate> mapToMany(ResultSet resultSet) throws SQLException {
-        List<PriceRate> priceRates = new ArrayList<>();
+    private List<DiscountRate> mapToMany(ResultSet resultSet) throws SQLException {
+        List<DiscountRate> discountRates = new ArrayList<>();
         while (resultSet.next()) {
-            PriceRate priceRate = getCarStatusFromResultSet(resultSet);
-            priceRates.add(priceRate);
+            DiscountRate discountRate = getEntityFromResultSet(resultSet);
+            discountRates.add(discountRate);
         }
-        return priceRates;
+        return discountRates;
     }
 
-    private PriceRate getCarStatusFromResultSet(ResultSet resultSet) throws SQLException {
-        PriceRate priceRate = new PriceRate();
-        priceRate.setId(Integer.parseInt(resultSet.getString("id")));
-        CarCategory category = new CarCategory();
-        category.setId(resultSet.getInt("category_id"));
-        category.setTitle(resultSet.getString("category_title"));
-        priceRate.setCategory(category);
-        priceRate.setRate(resultSet.getBigDecimal("rate"));
-        priceRate.setMinOrderPrice(resultSet.getBigDecimal("min_order_price"));
-        return priceRate;
+    private DiscountRate getEntityFromResultSet(ResultSet resultSet) throws SQLException {
+        DiscountRate discountRate = new DiscountRate();
+        discountRate.setId(Integer.parseInt(resultSet.getString("id")));
+        discountRate.setMoneySpent(resultSet.getBigDecimal("total_spent"));
+        discountRate.setDiscountRate(resultSet.getInt("discount"));
+        return discountRate;
     }
 }

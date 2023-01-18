@@ -39,6 +39,8 @@
                         <c:out value="${trip.destinationAddress}"/><br><br>
                         <p class="card-text"><fmt:message key="label.trip.distance"/></p>
                         <c:out value="${trip.distance} km"/><br><br>
+                         <p class="card-text"><fmt:message key="label.trip.price"/></p>
+                         <c:out value="${trip.price} UAH"/><br><br>
                         <p class="card-text"><fmt:message key="label.trip.category"/></p>
                         <c:out value="${trip.category.title}"/><br><br>
                         <p class="card-text"><fmt:message key="label.trip.passengers.number"/></p>

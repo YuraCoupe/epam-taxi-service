@@ -6,9 +6,8 @@ import java.math.BigDecimal;
 
 public class DiscountRate {
     private Integer id;
-    private CarCategory category;
-    private BigDecimal rate;
-    private BigDecimal minOrderPrice;
+    private BigDecimal moneySpent;
+    private Integer discountRate;
 
     public Integer getId() {
         return id;
@@ -18,27 +17,19 @@ public class DiscountRate {
         this.id = id;
     }
 
-    public CarCategory getCategory() {
-        return category;
+    public BigDecimal getMoneySpent() {
+        return moneySpent;
     }
 
-    public void setCategory(CarCategory category) {
-        this.category = category;
+    public void setMoneySpent(BigDecimal moneySpent) {
+        this.moneySpent = moneySpent;
     }
 
-    public BigDecimal getRate() {
-        return rate;
+    public Integer getDiscountRate() {
+        return discountRate;
     }
 
-    public void setRate(BigDecimal rate) {
-        this.rate = rate;
-    }
-
-    public BigDecimal getMinOrderPrice() {
-        return minOrderPrice;
-    }
-
-    public void setMinOrderPrice(BigDecimal minOrderPrice) {
-        this.minOrderPrice = minOrderPrice;
+    public void setDiscountRate(Integer discountRate) {
+        this.discountRate = discountRate;
     }
 }

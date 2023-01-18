@@ -1,7 +1,6 @@
 package com.epam.rd.java.basic.taxiservice.repository;
 
 import com.epam.rd.java.basic.taxiservice.config.DatabaseManager;
-import com.epam.rd.java.basic.taxiservice.model.Car.CarStatus;
 import com.epam.rd.java.basic.taxiservice.model.Role;
 
 import java.sql.*;
@@ -121,7 +120,7 @@ public class RoleRepository {
     private Optional<Role> mapToOne(ResultSet resultSet) throws SQLException {
         Role role = null;
         while (resultSet.next()) {
-            role = getRoleFromResultSet(resultSet);
+            role = getEntityFromResultSet(resultSet);
         }
         return Optional.ofNullable(role);
     }
@@ -129,13 +128,13 @@ public class RoleRepository {
     private List<Role> mapToMany(ResultSet resultSet) throws SQLException {
         List<Role> roles = new ArrayList<>();
         while (resultSet.next()) {
-            Role role = getRoleFromResultSet(resultSet);
+            Role role = getEntityFromResultSet(resultSet);
             roles.add(role);
         }
         return roles;
     }
 
-    private Role getRoleFromResultSet(ResultSet resultSet) throws SQLException {
+    private Role getEntityFromResultSet(ResultSet resultSet) throws SQLException {
         Role role = new Role();
         role.setId(Integer.parseInt(resultSet.getString("id")));
         role.setTitle(resultSet.getString("title"));

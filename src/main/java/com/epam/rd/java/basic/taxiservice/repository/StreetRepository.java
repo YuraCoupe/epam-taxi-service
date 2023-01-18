@@ -1,7 +1,6 @@
 package com.epam.rd.java.basic.taxiservice.repository;
 
 import com.epam.rd.java.basic.taxiservice.config.DatabaseManager;
-import com.epam.rd.java.basic.taxiservice.model.Car.CarModel;
 import com.epam.rd.java.basic.taxiservice.model.Street;
 
 import java.sql.*;
@@ -118,7 +117,7 @@ public class StreetRepository {
     private Optional<Street> mapToOne(ResultSet resultSet) throws SQLException {
         Street street = null;
         while (resultSet.next()) {
-            street = getStreetModelFromResultSet(resultSet);
+            street = getEntityFromResultSet(resultSet);
         }
         return Optional.ofNullable(street);
     }
@@ -126,13 +125,13 @@ public class StreetRepository {
     private List<Street> mapToMany(ResultSet resultSet) throws SQLException {
         List<Street> streets = new ArrayList<>();
         while (resultSet.next()) {
-            Street street = getStreetModelFromResultSet(resultSet);
+            Street street = getEntityFromResultSet(resultSet);
             streets.add(street);
         }
         return streets;
     }
 
-    private Street getStreetModelFromResultSet(ResultSet resultSet) throws SQLException {
+    private Street getEntityFromResultSet(ResultSet resultSet) throws SQLException {
         Street street = new Street();
         street.setId(Integer.parseInt(resultSet.getString("street_id")));
         street.setStreetType(resultSet.getString("type_title"));

@@ -4,8 +4,6 @@ import com.epam.rd.java.basic.taxiservice.config.DatabaseManager;
 import com.epam.rd.java.basic.taxiservice.model.*;
 import com.epam.rd.java.basic.taxiservice.model.Car.Car;
 import com.epam.rd.java.basic.taxiservice.model.Car.CarCategory;
-import com.epam.rd.java.basic.taxiservice.model.Car.CarModel;
-import com.epam.rd.java.basic.taxiservice.model.Car.CarStatus;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -29,6 +27,7 @@ public class TripRepository {
                     "price = ?,\n" +
                     "status_id = ?,\n" +
                     "open_time = ?,\n" +
+                    "close_time = ?,\n" +
                     "distance = ?\n" +
                     "WHERE id = ?;";
     private static final String FIND_ALL =
@@ -174,8 +173,9 @@ public class TripRepository {
             preparedStatement.setBigDecimal(6, trip.getPrice());
             preparedStatement.setInt(7, trip.getStatus().getId());
             preparedStatement.setTimestamp(8, trip.getOpenTime());
-            preparedStatement.setDouble(9, trip.getDistance());
-            preparedStatement.setInt(10, trip.getId());
+            preparedStatement.setObject(9, trip.getCloseTime(), Types.TIMESTAMP);
+            preparedStatement.setDouble(10, trip.getDistance());
+            preparedStatement.setInt(11, trip.getId());
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();
@@ -345,7 +345,7 @@ public class TripRepository {
     private Optional<Trip> mapToOne(ResultSet resultSet) throws SQLException {
         Trip trip = null;
         while (resultSet.next()) {
-            trip = getTripFromResultSet(resultSet);
+            trip = getEntityFromResultSet(resultSet);
         }
         return Optional.ofNullable(trip);
     }
@@ -353,13 +353,13 @@ public class TripRepository {
     private List<Trip> mapToMany(ResultSet resultSet) throws SQLException {
         List<Trip> trips = new ArrayList<>();
         while (resultSet.next()) {
-            Trip trip = getTripFromResultSet(resultSet);
+            Trip trip = getEntityFromResultSet(resultSet);
             trips.add(trip);
         }
         return trips;
     }
 
-    private Trip getTripFromResultSet(ResultSet resultSet) throws SQLException {
+    private Trip getEntityFromResultSet(ResultSet resultSet) throws SQLException {
         Trip trip = new Trip();
         trip.setId(resultSet.getInt("id"));
         User user = new User();
