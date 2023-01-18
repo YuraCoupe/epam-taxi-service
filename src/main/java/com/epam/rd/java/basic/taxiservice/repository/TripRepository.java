@@ -144,7 +144,7 @@ public class TripRepository {
             preparedStatement.setString(3, trip.getDestinationAddress());
             preparedStatement.setInt(4, trip.getNumberOfPassengers());
             preparedStatement.setInt(5, trip.getCategory().getId());
-            preparedStatement.setDouble(6, trip.getPrice());
+            preparedStatement.setBigDecimal(6, trip.getPrice());
             preparedStatement.setInt(7, trip.getStatus().getId());
             preparedStatement.setTimestamp(8, trip.getOpenTime());
             preparedStatement.setDouble(9, trip.getDistance());
@@ -171,7 +171,7 @@ public class TripRepository {
             preparedStatement.setString(3, trip.getDestinationAddress());
             preparedStatement.setInt(4, trip.getNumberOfPassengers());
             preparedStatement.setInt(5, trip.getCategory().getId());
-            preparedStatement.setDouble(6, trip.getPrice());
+            preparedStatement.setBigDecimal(6, trip.getPrice());
             preparedStatement.setInt(7, trip.getStatus().getId());
             preparedStatement.setTimestamp(8, trip.getOpenTime());
             preparedStatement.setDouble(9, trip.getDistance());
@@ -379,7 +379,7 @@ public class TripRepository {
         status.setTitle(resultSet.getString("status"));
         trip.setStatus(status);
         trip.setNumberOfPassengers(resultSet.getInt("number_of_passengers"));
-        trip.setPrice(resultSet.getDouble("price"));
+        trip.setPrice(resultSet.getBigDecimal("price"));
         trip.setDistance(resultSet.getDouble("distance"));
         trip.setOpenTime(resultSet.getTimestamp("open_time"));
         return trip;
