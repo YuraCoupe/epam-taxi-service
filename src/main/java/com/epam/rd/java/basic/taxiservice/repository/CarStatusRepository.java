@@ -107,7 +107,7 @@ public class CarStatusRepository {
     private Optional<CarStatus> mapToOne(ResultSet resultSet) throws SQLException {
         CarStatus status = null;
         while (resultSet.next()) {
-            status = getCarStatusFromResultSet(resultSet);
+            status = getCarEntityFromResultSet(resultSet);
         }
         return Optional.ofNullable(status);
     }
@@ -115,13 +115,13 @@ public class CarStatusRepository {
     private List<CarStatus> mapToMany(ResultSet resultSet) throws SQLException {
         List<CarStatus> carStatuses = new ArrayList<>();
         while (resultSet.next()) {
-            CarStatus status = getCarStatusFromResultSet(resultSet);
+            CarStatus status = getCarEntityFromResultSet(resultSet);
             carStatuses.add(status);
         }
         return carStatuses;
     }
 
-    private CarStatus getCarStatusFromResultSet(ResultSet resultSet) throws SQLException {
+    private CarStatus getCarEntityFromResultSet(ResultSet resultSet) throws SQLException {
         CarStatus status = new CarStatus();
         status.setId(Integer.parseInt(resultSet.getString("id")));
         status.setTitle(resultSet.getString("title"));

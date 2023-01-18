@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -31,7 +32,7 @@ public class TripServlet extends HttpServlet {
     private CarStatusService carStatusService;
     private CarCategoryService categoryService;
     private BingMapsService bingMapsService;
-
+    private PriceService priceService;
     private TripValidator validator;
 
 
@@ -48,6 +49,8 @@ public class TripServlet extends HttpServlet {
         CarCategoryRepository categoryRepository = new CarCategoryRepository(dbConnector);
         CarStatusRepository carStatusRepository = new CarStatusRepository(dbConnector);
         CarRepository carRepository = new CarRepository(dbConnector);
+        PriceRateRepository priceRateRepository = new PriceRateRepository(dbConnector);
+        DiscountRateRepository discountRateRepository = new DiscountRateRepository(dbConnector);
         this.userService = new UserService(userRepository);
         this.tripService = new TripService(tripRepository, carRepository);
         this.streetService = new StreetService(streetRepository);
@@ -56,6 +59,7 @@ public class TripServlet extends HttpServlet {
         this.carStatusService = new CarStatusService(carStatusRepository);
         this.carService = new CarService(carRepository);
         this.bingMapsService = new BingMapsService();
+        this.priceService = new PriceService(priceRateRepository, discountRateRepository);
         this.validator = new TripValidator(tripRepository, categoryRepository, bingMapsService);
 
     }
@@ -80,7 +84,7 @@ public class TripServlet extends HttpServlet {
             Trip trip = tripService.findById(tripId);
 
             CarStatus carStatus = carStatusService.findByTitle("available for order");
-            for (Car car: trip.getCars()) {
+            for (Car car : trip.getCars()) {
                 if (car.getDriver().getId().equals(userId)) {
                     car.setStatus(carStatus);
                     car.getCurrentTrip().setId(null);
@@ -99,6 +103,7 @@ public class TripServlet extends HttpServlet {
             if (tripIsCompleted) {
                 TripStatus status = tripStatusService.findByTitle("Completed");
                 trip.setStatus(status);
+                trip.setCloseTime(new Timestamp(System.currentTimeMillis()));
                 tripService.update(trip);
             }
 
@@ -168,7 +173,7 @@ public class TripServlet extends HttpServlet {
         trip.setDepartureAddress(bingRoute.getStartLocation());
         trip.setDestinationAddress(bingRoute.getEndLocation());
         trip.setDistance(bingRoute.getTravelDistance());
-        Double price = 200.00;
+        BigDecimal price = priceService.calculateTripPrice(trip.getDistance(), user.getSumSpent(), category, trip.getCars().size());
         trip.setPrice(price);
         trip.setOpenTime(new Timestamp(System.currentTimeMillis()));
         trip.setCars(new HashSet<>(cars));
@@ -198,7 +203,7 @@ public class TripServlet extends HttpServlet {
             if (loggedUserRoleTitle.equals("ROLE_CLIENT")) {
                 Optional<Trip> activeTripOptional = tripService.findActiveByClientId(loggedInUser.getId());
                 activeTripOptional.ifPresent(trip -> req.getSession().setAttribute("activeTripId", trip.getId()));
-            }else if (loggedUserRoleTitle.equals("ROLE_DRIVER")) {
+            } else if (loggedUserRoleTitle.equals("ROLE_DRIVER")) {
                 Optional<Trip> activeTripOptional = tripService.findActiveByDriverId(loggedInUser.getId());
                 activeTripOptional.ifPresent(trip -> req.getSession().setAttribute("activeTripId", trip.getId()));
             }
@@ -245,11 +250,11 @@ public class TripServlet extends HttpServlet {
         }
         if (requestURI.equals("/trips")) {
 
-                if (req.getSession().getAttribute("activeTripId") != null) {
-                    Integer activeTripId = (Integer) req.getSession().getAttribute("activeTripId");
-                    handleView(activeTripId, req, resp);
-                    return;
-                }
+            if (req.getSession().getAttribute("activeTripId") != null) {
+                Integer activeTripId = (Integer) req.getSession().getAttribute("activeTripId");
+                handleView(activeTripId, req, resp);
+                return;
+            }
 
         }
         int totalNumber;
@@ -275,7 +280,7 @@ public class TripServlet extends HttpServlet {
             }
         }
 
-        int pageCount = totalNumber / limit + 1;
+        int pageCount = totalNumber % limit == 0 ? totalNumber / limit : totalNumber / limit + 1;
         req.setAttribute("trips", trips);
         req.setAttribute("page", page);
         req.setAttribute("pageCount", pageCount);

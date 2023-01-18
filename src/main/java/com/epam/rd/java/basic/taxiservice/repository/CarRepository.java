@@ -297,7 +297,7 @@ public class CarRepository {
     private Optional<Car> mapToOne(ResultSet resultSet) throws SQLException {
         Car car = null;
         while (resultSet.next()) {
-            car = getCarFromResultSet(resultSet);
+            car = getEntityFromResultSet(resultSet);
         }
         return Optional.ofNullable(car);
     }
@@ -305,13 +305,13 @@ public class CarRepository {
     private List<Car> mapToMany(ResultSet resultSet) throws SQLException {
         List<Car> cars = new ArrayList<>();
         while (resultSet.next()) {
-            Car car = getCarFromResultSet(resultSet);
+            Car car = getEntityFromResultSet(resultSet);
             cars.add(car);
         }
         return cars;
     }
 
-    private Car getCarFromResultSet(ResultSet resultSet) throws SQLException {
+    private Car getEntityFromResultSet(ResultSet resultSet) throws SQLException {
         Car car = new Car();
         CarModel carModel = new CarModel();
         CarCategory category = new CarCategory();

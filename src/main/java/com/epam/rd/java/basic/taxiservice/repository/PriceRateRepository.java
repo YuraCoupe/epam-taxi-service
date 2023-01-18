@@ -2,7 +2,6 @@ package com.epam.rd.java.basic.taxiservice.repository;
 
 import com.epam.rd.java.basic.taxiservice.config.DatabaseManager;
 import com.epam.rd.java.basic.taxiservice.model.Car.CarCategory;
-import com.epam.rd.java.basic.taxiservice.model.Car.CarStatus;
 import com.epam.rd.java.basic.taxiservice.model.PriceRate;
 
 import java.sql.*;
@@ -17,21 +16,21 @@ public class PriceRateRepository {
                     "(?, ?, ?);";
     private static final String UPDATE = "UPDATE price_rate SET category_id = ?, rate = ?, min_order_price = ? WHERE id = ?;";
     private static final String FIND_ALL =
-            "SELECT id, category_id, c.title AS category_title, rate, min_order_price\n" +
-                    "FROM price_rate\n" +
-                    "JOIN car_category ON category_id = c.id\n" +
-                    "ORDER BY category_id;";
+            "SELECT pr.id, pr.category_id, c.title AS category_title, pr.rate, pr.min_order_price\n" +
+                    "FROM price_rate pr\n" +
+                    "JOIN car_category c ON pr.category_id = c.id\n" +
+                    "ORDER BY pr.category_id;";
     private static final String DELETE = "DELETE FROM price_rate WHERE id = ?;";
     private static final String FIND_BY_ID =
-            "SELECT id, category_id, c.title AS category_title, rate, min_order_price\n" +
-                    "FROM price_rate\n" +
-                    "JOIN car_category ON category_id = c.id\n" +
-                    "WHERE id = ?";
+            "SELECT pr.id, pr.category_id, c.title AS category_title, pr.rate, pr.min_order_price\n" +
+                    "FROM price_rate pr\n" +
+                    "JOIN car_category c ON category_id = c.id\n" +
+                    "WHERE pr.id = ?";
     private static final String FIND_BY_CATEGORY =
-            "SELECT id, category_id, c.title AS category_title, rate, min_order_price\n" +
-                    "FROM price_rate\n" +
-                    "JOIN car_category ON category_id = c.id\n" +
-                    "WHERE c.title = ?";
+            "SELECT pr.id, pr.category_id, c.title AS category_title, pr.rate, pr.min_order_price\n" +
+                    "FROM price_rate pr\n" +
+                    "JOIN car_category c ON category_id = c.id\n" +
+                    "WHERE category_id = ?";
 
     private final DatabaseManager databaseManager;
 
@@ -39,10 +38,10 @@ public class PriceRateRepository {
         this.databaseManager = databaseManager;
     }
 
-    public Optional<PriceRate> findByCategory(String category) {
+    public Optional<PriceRate> findByCategory(CarCategory category) {
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_CATEGORY)) {
-            preparedStatement.setString(1, category);
+            preparedStatement.setInt(1, category.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
             return mapToOne(resultSet);
         } catch (SQLException throwables) {
@@ -117,7 +116,7 @@ public class PriceRateRepository {
     private Optional<PriceRate> mapToOne(ResultSet resultSet) throws SQLException {
         PriceRate priceRate = null;
         while (resultSet.next()) {
-            priceRate = getCarStatusFromResultSet(resultSet);
+            priceRate = getEntityFromResultSet(resultSet);
         }
         return Optional.ofNullable(priceRate);
     }
@@ -125,13 +124,13 @@ public class PriceRateRepository {
     private List<PriceRate> mapToMany(ResultSet resultSet) throws SQLException {
         List<PriceRate> priceRates = new ArrayList<>();
         while (resultSet.next()) {
-            PriceRate priceRate = getCarStatusFromResultSet(resultSet);
+            PriceRate priceRate = getEntityFromResultSet(resultSet);
             priceRates.add(priceRate);
         }
         return priceRates;
     }
 
-    private PriceRate getCarStatusFromResultSet(ResultSet resultSet) throws SQLException {
+    private PriceRate getEntityFromResultSet(ResultSet resultSet) throws SQLException {
         PriceRate priceRate = new PriceRate();
         priceRate.setId(Integer.parseInt(resultSet.getString("id")));
         CarCategory category = new CarCategory();
