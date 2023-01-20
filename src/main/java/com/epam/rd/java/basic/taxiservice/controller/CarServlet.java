@@ -1,8 +1,5 @@
 package com.epam.rd.java.basic.taxiservice.controller;
 
-import com.epam.rd.java.basic.taxiservice.config.DatabaseManager;
-import com.epam.rd.java.basic.taxiservice.config.PostgresHikariProvider;
-import com.epam.rd.java.basic.taxiservice.config.PropertiesUtil;
 import com.epam.rd.java.basic.taxiservice.model.Car.Car;
 import com.epam.rd.java.basic.taxiservice.model.Car.CarCategory;
 import com.epam.rd.java.basic.taxiservice.model.Car.CarModel;
@@ -10,10 +7,10 @@ import com.epam.rd.java.basic.taxiservice.model.Car.CarStatus;
 import com.epam.rd.java.basic.taxiservice.model.ErrorMessage;
 import com.epam.rd.java.basic.taxiservice.model.Trip;
 import com.epam.rd.java.basic.taxiservice.model.User;
-import com.epam.rd.java.basic.taxiservice.repository.*;
 import com.epam.rd.java.basic.taxiservice.service.*;
 import com.epam.rd.java.basic.taxiservice.validator.CarValidator;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,21 +31,13 @@ public class CarServlet extends HttpServlet {
 
     @Override
     public void init() {
-        PropertiesUtil util = new PropertiesUtil(getServletContext());
-
-        DatabaseManager dbConnector = new PostgresHikariProvider(util.getHostname(), util.getPort(),
-                util.getSchema(), util.getUser(), util.getPassword(), util.getJdbcDriver());
-        CarRepository carRepository = new CarRepository(dbConnector);
-        CarModelRepository carModelRepository = new CarModelRepository(dbConnector);
-        CarCategoryRepository carCategoryRepository = new CarCategoryRepository(dbConnector);
-        CarStatusRepository carStatusRepository = new CarStatusRepository(dbConnector);
-        UserRepository userRepository = new UserRepository(dbConnector);
-        this.carService = new CarService(carRepository);
-        this.carModelService = new CarModelService(carModelRepository);
-        this.carCategoryService = new CarCategoryService(carCategoryRepository);
-        this.carStatusService = new CarStatusService(carStatusRepository);
-        this.userService = new UserService(userRepository);
-        validator = new CarValidator(carRepository, carStatusRepository);
+        ServletContext ctx = getServletContext();
+        this.carService = (CarService) ctx.getAttribute("carService");
+        this.carModelService = (CarModelService) ctx.getAttribute("carModelService");
+        this.carCategoryService = (CarCategoryService) ctx.getAttribute("carCategoryService");
+        this.carStatusService = (CarStatusService) ctx.getAttribute("carStatusService");
+        this.userService = (UserService) ctx.getAttribute("userService");
+        this.validator = (CarValidator) ctx.getAttribute("carValidator");
     }
 
     @Override
@@ -89,7 +78,7 @@ public class CarServlet extends HttpServlet {
         car.setLicensePlate(licensePlate);
 
         String driverIdString = req.getParameter("driverId");
-        Integer driverId = null;
+        Integer driverId;
         User driver = new User();
         if (driverIdString != null && !driverIdString.isBlank()) {
             driverId = Integer.parseInt(driverIdString);

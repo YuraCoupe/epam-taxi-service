@@ -1,15 +1,10 @@
 package com.epam.rd.java.basic.taxiservice.controller;
 
-import com.epam.rd.java.basic.taxiservice.config.DatabaseManager;
-import com.epam.rd.java.basic.taxiservice.config.PostgresHikariProvider;
-import com.epam.rd.java.basic.taxiservice.config.PropertiesUtil;
 import com.epam.rd.java.basic.taxiservice.exception.UserNotFoundException;
 import com.epam.rd.java.basic.taxiservice.model.ErrorMessage;
 import com.epam.rd.java.basic.taxiservice.model.User;
-import com.epam.rd.java.basic.taxiservice.repository.*;
 import com.epam.rd.java.basic.taxiservice.service.*;
 import com.epam.rd.java.basic.taxiservice.validator.UserValidator;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.servlet.ServletContext;
@@ -30,10 +25,7 @@ public class LoginServlet extends HttpServlet {
     private PasswordEncoder passwordEncoder;
 
     public void init() {
-        PropertiesUtil util = new PropertiesUtil(getServletContext());
-
         ServletContext ctx = getServletContext();
-        DatabaseManager dbConnector = (DatabaseManager) ctx.getAttribute("dbConnector");
         userValidator = (UserValidator) ctx.getAttribute("userValidator");
         userService = (UserService) ctx.getAttribute("userService");
         passwordEncoder = (PasswordEncoder) ctx.getAttribute("passwordEncoder");
