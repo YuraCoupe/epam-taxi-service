@@ -1,17 +1,14 @@
 package com.epam.rd.java.basic.taxiservice.controller;
 
-import com.epam.rd.java.basic.taxiservice.config.DatabaseManager;
-import com.epam.rd.java.basic.taxiservice.config.PostgresHikariProvider;
-import com.epam.rd.java.basic.taxiservice.config.PropertiesUtil;
 import com.epam.rd.java.basic.taxiservice.exception.CarNotFoundException;
 import com.epam.rd.java.basic.taxiservice.model.*;
 import com.epam.rd.java.basic.taxiservice.model.Car.Car;
 import com.epam.rd.java.basic.taxiservice.model.Car.CarCategory;
 import com.epam.rd.java.basic.taxiservice.model.Car.CarStatus;
-import com.epam.rd.java.basic.taxiservice.repository.*;
 import com.epam.rd.java.basic.taxiservice.service.*;
 import com.epam.rd.java.basic.taxiservice.validator.TripValidator;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -37,28 +34,16 @@ public class TripServlet extends HttpServlet {
 
     @Override
     public void init() {
-        PropertiesUtil util = new PropertiesUtil(getServletContext());
-
-        DatabaseManager dbConnector = new PostgresHikariProvider(util.getHostname(), util.getPort(),
-                util.getSchema(), util.getUser(), util.getPassword(), util.getJdbcDriver());
-        TripRepository tripRepository = new TripRepository(dbConnector);
-        UserRepository userRepository = new UserRepository(dbConnector);
-        TripStatusRepository tripStatusRepository = new TripStatusRepository(dbConnector);
-        CarCategoryRepository categoryRepository = new CarCategoryRepository(dbConnector);
-        CarStatusRepository carStatusRepository = new CarStatusRepository(dbConnector);
-        CarRepository carRepository = new CarRepository(dbConnector);
-        PriceRateRepository priceRateRepository = new PriceRateRepository(dbConnector);
-        DiscountRateRepository discountRateRepository = new DiscountRateRepository(dbConnector);
-        this.userService = new UserService(userRepository);
-        this.tripService = new TripService(tripRepository, carRepository);
-        this.tripStatusService = new TripStatusService(tripStatusRepository);
-        this.categoryService = new CarCategoryService(categoryRepository);
-        this.carStatusService = new CarStatusService(carStatusRepository);
-        this.carService = new CarService(carRepository);
-        this.bingMapsService = new BingMapsService();
-        this.priceService = new PriceService(priceRateRepository, discountRateRepository);
-        this.validator = new TripValidator(tripRepository, categoryRepository, bingMapsService);
-
+        ServletContext ctx = getServletContext();
+        this.userService = (UserService) ctx.getAttribute("userService");
+        this.tripService = (TripService) ctx.getAttribute("tripService");
+        this.tripStatusService = (TripStatusService) ctx.getAttribute("tripStatusService");
+        this.categoryService = (CarCategoryService) ctx.getAttribute("categoryService");
+        this.carStatusService = (CarStatusService) ctx.getAttribute("carStatusService");
+        this.carService = (CarService) ctx.getAttribute("carService");
+        this.bingMapsService = (BingMapsService) ctx.getAttribute("bingMapsService");
+        this.priceService = (PriceService) ctx.getAttribute("priceService");
+        this.validator = (TripValidator) ctx.getAttribute("tripValidator");
     }
 
     @Override
