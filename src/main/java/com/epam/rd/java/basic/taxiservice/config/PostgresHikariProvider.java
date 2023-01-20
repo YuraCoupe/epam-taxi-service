@@ -32,4 +32,9 @@ public class PostgresHikariProvider implements DatabaseManager{
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
+
+    @Override
+    public void closeConnection() {
+        dataSource.close();
+    }
 }
