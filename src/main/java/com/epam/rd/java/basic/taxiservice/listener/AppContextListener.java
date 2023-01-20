@@ -57,10 +57,6 @@ public class AppContextListener implements ServletContextListener {
         ctx.setAttribute("roleRepository", roleRepository);
         System.out.println("RoleRepository initialized for Application.");
 
-        StreetRepository streetRepository = new StreetRepository(dbConnector);
-        ctx.setAttribute("streetRepository", streetRepository);
-        System.out.println("StreetRepository initialized for Application.");
-
         TripRepository tripRepository = new TripRepository(dbConnector);
         ctx.setAttribute("tripRepository", tripRepository);
         System.out.println("TripRepository initialized for Application.");
@@ -100,10 +96,6 @@ public class AppContextListener implements ServletContextListener {
         RoleService roleService = new RoleService(roleRepository);
         ctx.setAttribute("roleService", roleService);
         System.out.println("RoleService initialized for Application.");
-
-        StreetService streetService = new StreetService(streetRepository);
-        ctx.setAttribute("streetService", streetService);
-        System.out.println("StreetService initialized for Application.");
 
         TripService tripService = new TripService(tripRepository, carRepository);
         ctx.setAttribute("tripService", tripService);

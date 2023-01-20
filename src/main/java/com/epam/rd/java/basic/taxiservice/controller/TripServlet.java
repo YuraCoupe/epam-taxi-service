@@ -26,7 +26,6 @@ import java.util.*;
 public class TripServlet extends HttpServlet {
     private TripService tripService;
     private UserService userService;
-    private StreetService streetService;
     private CarService carService;
     private TripStatusService tripStatusService;
     private CarStatusService carStatusService;
@@ -44,7 +43,6 @@ public class TripServlet extends HttpServlet {
                 util.getSchema(), util.getUser(), util.getPassword(), util.getJdbcDriver());
         TripRepository tripRepository = new TripRepository(dbConnector);
         UserRepository userRepository = new UserRepository(dbConnector);
-        StreetRepository streetRepository = new StreetRepository(dbConnector);
         TripStatusRepository tripStatusRepository = new TripStatusRepository(dbConnector);
         CarCategoryRepository categoryRepository = new CarCategoryRepository(dbConnector);
         CarStatusRepository carStatusRepository = new CarStatusRepository(dbConnector);
@@ -53,7 +51,6 @@ public class TripServlet extends HttpServlet {
         DiscountRateRepository discountRateRepository = new DiscountRateRepository(dbConnector);
         this.userService = new UserService(userRepository);
         this.tripService = new TripService(tripRepository, carRepository);
-        this.streetService = new StreetService(streetRepository);
         this.tripStatusService = new TripStatusService(tripStatusRepository);
         this.categoryService = new CarCategoryService(categoryRepository);
         this.carStatusService = new CarStatusService(carStatusRepository);
@@ -98,6 +95,7 @@ public class TripServlet extends HttpServlet {
             for (Car car : trip.getCars()) {
                 if (car.getStatus().getTitle().equals("on route")) {
                     tripIsCompleted = false;
+                    break;
                 }
             }
             if (tripIsCompleted) {
@@ -134,11 +132,10 @@ public class TripServlet extends HttpServlet {
         List<Car> cars = new ArrayList<>();
         if (allowSeveralCars == null) {
             try {
-                Integer categoryId = Integer.parseInt(req.getParameter("categoryId"));
+                int categoryId = Integer.parseInt(req.getParameter("categoryId"));
                 CarCategory category = categoryService.findById(categoryId);
-                Integer capacity = Integer.parseInt(req.getParameter("passengersNumber"));
+                int capacity = Integer.parseInt(req.getParameter("passengersNumber"));
                 cars.add(carService.findOneByCategoryAndCapacity(category.getTitle(), capacity));
-                ;
             } catch (CarNotFoundException e) {
                 req.setAttribute("noCarAvailable", "true");
                 handleNew(req, resp);
@@ -146,9 +143,9 @@ public class TripServlet extends HttpServlet {
             }
         } else {
             try {
-                Integer categoryId = Integer.parseInt(req.getParameter("categoryId"));
+                int categoryId = Integer.parseInt(req.getParameter("categoryId"));
                 CarCategory category = categoryService.findById(categoryId);
-                Integer capacity = Integer.parseInt(req.getParameter("passengersNumber"));
+                int capacity = Integer.parseInt(req.getParameter("passengersNumber"));
                 cars.addAll(carService.findSeveralByCategoryAndCapacity(category.getTitle(), capacity));
             } catch (CarNotFoundException e) {
                 req.setAttribute("noCarAvailable", "true");
@@ -261,7 +258,7 @@ public class TripServlet extends HttpServlet {
         int page = req.getParameter("page") != null ? Integer.parseInt(req.getParameter("page")) : 1;
         int limit = 5;
         int offset = (page - 1) * limit;
-        List<Trip> trips = null;
+        List<Trip> trips;
 
         switch (loggedUserRoleTitle) {
             case "ROLE_ADMINISTRATOR": {
