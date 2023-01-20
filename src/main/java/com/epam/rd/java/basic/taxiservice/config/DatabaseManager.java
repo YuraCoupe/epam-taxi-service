@@ -5,4 +5,5 @@ import java.sql.SQLException;
 
 public interface DatabaseManager {
     Connection getConnection() throws SQLException;
+    void closeConnection();
 }

@@ -12,6 +12,7 @@ import com.epam.rd.java.basic.taxiservice.validator.UserValidator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,16 +32,11 @@ public class UserServlet extends HttpServlet {
 
     @Override
     public void init() {
-        PropertiesUtil util = new PropertiesUtil(getServletContext());
-
-        DatabaseManager dbConnector = new PostgresHikariProvider(util.getHostname(), util.getPort(),
-                util.getSchema(), util.getUser(), util.getPassword(), util.getJdbcDriver());
-        UserRepository userRepository = new UserRepository(dbConnector);
-        RoleRepository roleRepository = new RoleRepository(dbConnector);
-        this.userService = new UserService(userRepository);
-        this.roleService = new RoleService(roleRepository);
-        validator = new UserValidator(userRepository);
-        passwordEncoder = new BCryptPasswordEncoder();
+        ServletContext ctx = getServletContext();
+        this.userService = (UserService) ctx.getAttribute("userService");
+        this.roleService = (RoleService) ctx.getAttribute("roleService");
+        validator =(UserValidator) ctx.getAttribute("userValidator");
+        passwordEncoder = (PasswordEncoder) ctx.getAttribute("passwordEncoder");
     }
 
     @Override
