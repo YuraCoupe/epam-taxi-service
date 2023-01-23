@@ -7,6 +7,7 @@ import com.epam.rd.java.basic.taxiservice.repository.DiscountRateRepository;
 import com.epam.rd.java.basic.taxiservice.repository.PriceRateRepository;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class PriceService {
     private final PriceRateRepository priceRateRepository;
@@ -24,6 +25,6 @@ public class PriceService {
         if (distanceRate.compareTo(priceRate.getMinOrderPrice()) < 0) {
             distanceRate = priceRate.getMinOrderPrice();
         }
-        return distanceRate.multiply(BigDecimal.valueOf((100.0 - discountRate.getDiscountRate()) / 100.0)).setScale(2);
+        return distanceRate.multiply(BigDecimal.valueOf((100.0 - discountRate.getDiscountRate()) / 100.0)).setScale(2, RoundingMode.UP);
     }
 }

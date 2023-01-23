@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group me-2" role="group" aria-label="Second group">
-                        <a href="/trips/list" type="button" class="btn btn-success"><fmt:message key="label.back.to.trips"/></a>
+                        <a href="/trips/list.do" type="button" class="btn btn-success"><fmt:message key="label.back.to.trips"/></a>
                     </div>
                 </div>
 
@@ -56,7 +56,7 @@
                         </c:if>
                         <c:if test = "${user.role.title == 'ROLE_DRIVER'}">
                         <c:if test = "${trip.status.title == 'Open'}">
-                            <form action="/trips/processing" method="post">
+                            <form action="/trips/start.do" method="post">
                                 <div class="col-sm-12 controls">
                                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                                         <input type="hidden" id="tripId" name="tripId" value="${trip.id}">
@@ -70,7 +70,7 @@
                             </form>
                         </c:if>
                         <c:if test = "${trip.status.title == 'Processing' && not empty activeTripId}">
-                            <form action="/trips/finish" method="post">
+                            <form action="/trips/finish.do" method="post">
                                 <div class="col-sm-12 controls">
                                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                                         <input type="hidden" id="tripId" name="tripId" value="${trip.id}">
@@ -85,7 +85,7 @@
                         </c:if>
                         </c:if>
 
-                        <a href="/trips/list" class="btn btn-success"><fmt:message key="label.back.to.trips"/></a>
+                        <a href="/trips/list.do" class="btn btn-success"><fmt:message key="label.back.to.trips"/></a>
                     </div>
                 </div>
             </div>

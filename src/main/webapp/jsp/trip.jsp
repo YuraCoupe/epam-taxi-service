@@ -13,6 +13,46 @@
 <html>
     <head>
          <c:import url="header.jsp"/>
+
+         <script type='text/javascript'>
+             function GetMap() {
+                 Microsoft.Maps.loadModule('Microsoft.Maps.AutoSuggest', {
+                     callback: function () {
+                         var viewRect = Microsoft.Maps.LocationRect.fromCorners(new Microsoft.Maps.Location(50.585184, 30.288197),
+                                     new Microsoft.Maps.Location(50.207098, 30.738492));
+                         var manager = new Microsoft.Maps.AutosuggestManager({
+                             placeSuggestions: false,
+                             countryCode: 'UA',
+                             bounds: viewRect
+                             });
+                         manager.attachAutosuggest('#searchBox', '#searchBoxContainer', selectedSuggestion);
+                        var manager2 = new Microsoft.Maps.AutosuggestManager({
+                             placeSuggestions: false,
+                             countryCode: 'UA',
+                             bounds: viewRect
+                             });
+                         manager2.attachAutosuggest('#searchBox2', '#searchBoxContainer', selectedSuggestion2);
+                     },
+                     errorCallback: function(msg){
+                         alert(msg);
+                     },
+                     credentials: "${msKey}"
+                 });
+             }
+
+             function selectedSuggestion(result) {
+                 //Populate the address textbox values.
+                 document.getElementById('addressLineTbx').value = result.address.addressLine || '';
+             }
+
+            function selectedSuggestion2(result) {
+                 //Populate the address textbox values.
+                 document.getElementById('addressLineTbx2').value = result.address.addressLine || '';
+             }
+         </script>
+
+         <script type='text/javascript' src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap' async defer></script>
+
     </head>
 
     <body>
@@ -24,54 +64,28 @@
             <div class="row">
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group me-2" role="group" aria-label="Second group">
-                        <a href="/trips/list" type="button" class="btn btn-success"><fmt:message key="label.back.to.trips"/></a>
+                        <a href="/trips/list.do" type="button" class="btn btn-success"><fmt:message key="label.back.to.trips"/></a>
                     </div>
                 </div>
             </div><br>
-            <form action="/trips" method="post">
+            <form ${trip.id == null ? 'action="/trips/save.do"' :'action="/trips/edit.do"'}  method="post">
                 <div class="form-group">
-                    <div class="row">
+                    <div class="row" id='searchBoxContainer'>
                         <label for="id"><fmt:message key="label.trip.id"/></label><br>
                         <fmt:message key="label.trip.enter.id" var="enterId"/>
                         <input type="number" readonly="readonly" class="form-control" id="tripId" placeholder="${enterId}" name="tripId" value="${trip.id}"> <br>
 
                         <label for="departureAddress"><fmt:message key="label.trip.departure.address"/></label><br>
-                        <select class="form-control" id="departureStreetId" name="departureStreetId" onchange="submit()">
-                            <option disabled selected value><fmt:message key="label.trip.select.street"/></option>
-                            <c:forEach items="${streets}" var="street">
-                                <option value="${street.id}" ${street.id == trip.departureAddress.street.id ? 'selected="selected"' : ''}>
-                                    <c:out value="${street.title}"/>
-                                    <c:out value="${street.streetType}"/>
-                                </option>
-                            </c:forEach>
-                        </select><br>
-                        <select class="form-control" id="departureAddressId" name="departureAddressId">
-                            <option disabled selected value><fmt:message key="label.trip.select.building"/></option>
-                            <c:forEach items="${departureAddresses}" var="address">
-                                <option value="${address.id}" ${address.id == trip.departureAddress.id ? 'selected="selected"' : ''}>
-                                    <c:out value="${address.building}"/>
-                                </option>
-                            </c:forEach>
-                        </select><br>
+                        <fmt:message key="label.trip.select.departure.address" var="selectDepartureAddress"/>
+                        <input type="text" class="form-control" id="searchBox" placeholder="${selectDepartureAddress}" value="${trip.departureAddress}"> <br>
+                        <input type="text" readonly="readonly" class="form-control" id="addressLineTbx"
+                            name="departureAddress" value="${trip.departureAddress}" placeholder="${selectDepartureAddress}" value="${trip.departureAddress}"> <br>
 
                         <label for="destinationAddress"><fmt:message key="label.trip.destination.address"/></label><br>
-                        <select class="form-control" id="destinationStreetId" name="destinationStreetId" onchange="submit()">
-                            <option disabled selected value><fmt:message key="label.trip.select.street"/></option>
-                            <c:forEach items="${streets}" var="street">
-                                <option value="${street.id}" ${street.id == trip.destinationAddress.street.id ? 'selected="selected"' : ''}>
-                                    <c:out value="${street.title}"/>
-                                    <c:out value="${street.streetType}"/>
-                                </option>
-                            </c:forEach>
-                        </select><br>
-                        <select class="form-control" id="destinationAddressId" name="destinationAddressId">
-                            <option disabled selected value><fmt:message key="label.trip.select.building"/></option>
-                            <c:forEach items="${destinationAddresses}" var="address">
-                                <option value="${address.id}" ${address.id == trip.destinationAddress.id ? 'selected="selected"' : ''}>
-                                    <c:out value="${address.building}"/>
-                                </option>
-                            </c:forEach>
-                        </select><br>
+                         <fmt:message key="label.trip.select.destination.address" var="selectDestinationAddress"/>
+                         <input type="text" class="form-control" id="searchBox2" placeholder="${selectDestinationAddress}" value="${trip.destinationAddress}"> <br>
+                         <input type="text" readonly="readonly" class="form-control" id="addressLineTbx2"
+                             name="destinationAddress" value="${trip.destinationAddress}" placeholder="${selectDepartureAddress}" value="${trip.destinationAddress}"><br>
 
                         <label for="passengersNumber"><fmt:message key="label.trip.passengers.number" var="passengersNumber"/>${passengersNumber}</label><br>
                         <select class="form-control" id="passengersNumber" name="passengersNumber">

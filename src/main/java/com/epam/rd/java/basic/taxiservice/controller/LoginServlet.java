@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet({"/login"})
+//@WebServlet({"/login"})
 public class LoginServlet extends HttpServlet {
     private UserValidator userValidator;
     private UserService userService;

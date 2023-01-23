@@ -33,10 +33,10 @@
                     <div class="btn-group me-2" role="group" aria-label="Second group">
                         <c:choose>
                             <c:when test = "${not empty sessionScope.activeTripId}">
-                                <a href="/trips/view/${activeTripId}" type="button" class="btn btn-success"><fmt:message key="label.trip.active"/></a>
+                                <a href="/trips/view.do?id=${activeTripId}" type="button" class="btn btn-success"><fmt:message key="label.trip.active"/></a>
                             </c:when>
                             <c:otherwise>
-                                <a href="/trips/new" type="button" class="btn btn-primary"><fmt:message key="label.add"/></a>
+                                <a href="/trips/new.do" type="button" class="btn btn-primary"><fmt:message key="label.add"/></a>
                             </c:otherwise>
                         </c:choose>
                     </div>
@@ -83,9 +83,9 @@
                         <td>
                             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                                 <div class="btn-group me-2" role="group" aria-label="Second group">
-                                     <a href="/trips/view/${trip.id}" type="button" class="btn btn-info"><fmt:message key="label.view"/></a>
-                                     <a href="/trips/edit/${trip.id}" type="button" class="btn btn-warning"><fmt:message key="label.edit"/></a>
-                                     <a href="/trips?deleteId=${trip.id}" type="button" class="btn btn-danger"><fmt:message key="label.remove"/></a>
+                                     <a href="/trips/view.do?id=${trip.id}" type="button" class="btn btn-info"><fmt:message key="label.view"/></a>
+                                     <a href="/trips/edit.do?id=${trip.id}" type="button" class="btn btn-warning"><fmt:message key="label.edit"/></a>
+                                     <a href="/trips/delete.do?id=${trip.id}" type="button" class="btn btn-danger"><fmt:message key="label.remove"/></a>
                                 </div>
                             </div>
                         </td>

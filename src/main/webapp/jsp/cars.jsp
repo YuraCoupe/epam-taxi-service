@@ -88,7 +88,7 @@
                 </tbody>
             </table>
 
-            <c:import url="paginationnavibar.jsp?page=${page}&pageCount=${pageCount}"/>
+            <c:import url="paginationNavibar.jsp?page=${page}&pageCount=${pageCount}"/>
 
 
         </div>
