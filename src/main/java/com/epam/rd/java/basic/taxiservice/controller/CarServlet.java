@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
-@WebServlet(urlPatterns = "/cars/*")
+//@WebServlet(urlPatterns = "/cars/*")
 public class CarServlet extends HttpServlet {
     private CarService carService;
     private CarModelService carModelService;
@@ -78,7 +78,7 @@ public class CarServlet extends HttpServlet {
         car.setLicensePlate(licensePlate);
 
         String driverIdString = req.getParameter("driverId");
-        Integer driverId;
+        int driverId;
         User driver = new User();
         if (driverIdString != null && !driverIdString.isBlank()) {
             driverId = Integer.parseInt(driverIdString);

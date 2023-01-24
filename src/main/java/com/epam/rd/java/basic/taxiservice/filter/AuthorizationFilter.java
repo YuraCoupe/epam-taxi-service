@@ -48,7 +48,6 @@ public class AuthorizationFilter implements Filter {
                 TRIP_LIST_PATH,
                 TRIP_START_PATH,
                 TRIP_FINISH_PATH,
-                CAR_PATH,
                 LOGOUT_PATH,
                 INDEX_PATH);
         List<String> ADMIN_ROLE_LIST = List.of(ANY_PATH);

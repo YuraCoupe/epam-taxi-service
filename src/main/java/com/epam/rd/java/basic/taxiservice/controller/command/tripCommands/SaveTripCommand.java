@@ -43,7 +43,7 @@ public class SaveTripCommand implements ActionCommand {
         ErrorMessage errorMessage = validator.validate(request);
         if (!errorMessage.getErrors().isEmpty()) {
             request.setAttribute("errorMessage", errorMessage);
-            String page = ConfigurationManager.getProperty("path.page.trips.new");
+            String page = ConfigurationManager.getProperty("uri.page.trips.new");
             return new ForwardResult(page);
         }
 
@@ -57,7 +57,7 @@ public class SaveTripCommand implements ActionCommand {
                 cars.add(carService.findOneByCategoryAndCapacity(category.getTitle(), capacity));
             } catch (CarNotFoundException e) {
                 request.setAttribute("noCarAvailable", "true");
-                String page = ConfigurationManager.getProperty("uri.page.trips.new=");
+                String page = ConfigurationManager.getProperty("uri.page.trips.new");
                 return new ForwardResult(page);
             }
         } else {
@@ -68,7 +68,7 @@ public class SaveTripCommand implements ActionCommand {
                 cars.addAll(carService.findSeveralByCategoryAndCapacity(category.getTitle(), capacity));
             } catch (CarNotFoundException e) {
                 request.setAttribute("noCarAvailable", "true");
-                String page = ConfigurationManager.getProperty("uri.page.trips.new=");
+                String page = ConfigurationManager.getProperty("uri.page.trips.new");
                 return new ForwardResult(page);
             }
         }

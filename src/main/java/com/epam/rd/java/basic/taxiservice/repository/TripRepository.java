@@ -76,7 +76,6 @@ public class TripRepository {
                     "JOIN person p ON p.id = t.person_id\n" +
                     "JOIN car_category c ON c.id = category_id\n" +
                     "JOIN trip_status s ON s.id = status_id\n" +
-                    "ORDER BY open_time DESC\n" +
                     "WHERE t.id = ?";
     private static final String FIND_BY_USER_ID_WITH_OFFSET_AND_LIMIT =
             "SELECT t.id, t.person_id, p.phone_number AS phone_number, p.first_name AS first_name, \n" +

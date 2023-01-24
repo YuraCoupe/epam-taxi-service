@@ -31,7 +31,6 @@ public class TripValidator {
         String departureAddress = req.getParameter("departureAddress");
         String destinationAddress = req.getParameter("destinationAddress");
 
-        BingRoute bingRoute = bingMapsService.getRoute(departureAddress, destinationAddress);
 
         if (departureAddress == null || departureAddress.isBlank()) {
             errors.add("Departure address can not be empty");
@@ -39,14 +38,19 @@ public class TripValidator {
         if (destinationAddress == null || destinationAddress.isBlank()) {
             errors.add("Destination address can not be empty");
         }
-        if (bingRoute.getStatusCode() != 200) {
-            errors.addAll(bingRoute.getErrorMessage().getErrors());
-        } else {
-            if (bingRoute.getStartLocation().equals("Kyiv, Ukraine")) {
-                errors.add("Departure address doesn't exist");
-            }
-            if (bingRoute.getEndLocation().equals("Kyiv, Ukraine")) {
-                errors.add("Destination address doesn't exist");
+        if (departureAddress != null && !departureAddress.isBlank()
+                && destinationAddress != null && !destinationAddress.isBlank()) {
+            BingRoute bingRoute = bingMapsService.getRoute(departureAddress, destinationAddress);
+
+            if (bingRoute.getStatusCode() != 200) {
+                errors.addAll(bingRoute.getErrorMessage().getErrors());
+            } else {
+                if (bingRoute.getStartLocation().equals("Kyiv, Ukraine")) {
+                    errors.add("Departure address doesn't exist");
+                }
+                if (bingRoute.getEndLocation().equals("Kyiv, Ukraine")) {
+                    errors.add("Destination address doesn't exist");
+                }
             }
         }
 
@@ -54,7 +58,7 @@ public class TripValidator {
         if (numberOfPassengersString == null || numberOfPassengersString.isBlank()) {
             errors.add("Number of passengers can not be empty");
         } else {
-            Integer numberOfPassengers = Integer.parseInt(numberOfPassengersString);
+            int numberOfPassengers = Integer.parseInt(numberOfPassengersString);
             if (numberOfPassengers < 1 || numberOfPassengers > 7) {
                 errors.add("Number of passengers should be from 1 to 7");
             }

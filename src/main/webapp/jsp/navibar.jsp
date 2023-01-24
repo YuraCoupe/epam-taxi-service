@@ -12,7 +12,7 @@
         <ul class="nav navbar-nav">
             <li><a href="/"><fmt:message key="label.main"/></a></li>
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="/trips.do">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="/trips/list.do">
                     <fmt:message key="label.trips"/><span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
@@ -21,30 +21,30 @@
                 </ul>
             </li>
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="/cars.do">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="/cars/list.do">
                     <fmt:message key="label.cars"/><span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="/cars.do"><fmt:message key="label.list"/></a></li>
+                    <li><a href="/cars/list.do"><fmt:message key="label.list"/></a></li>
                     <li><a href="/cars/new.do"><fmt:message key="label.add"/></a></li>
                 </ul>
                 </li>
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="/drivers/list.do">
                     <fmt:message key="label.drivers"/><span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="/drivers.do"><fmt:message key="label.list"/></a></li>
+                    <li><a href="/drivers/list.do"><fmt:message key="label.list"/></a></li>
                     <li><a href="/drivers/new.do"><fmt:message key="label.add"/></a></li>
                 </ul>
             </li>
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="/clients/list.do">
                     <fmt:message key="label.users"/><span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="/users.do"><fmt:message key="label.list"/></a></li>
-                    <li><a href="/users/new.do"><fmt:message key="label.add"/></a></li>
+                    <li><a href="/clients/list.do"><fmt:message key="label.list"/></a></li>
+                    <li><a href="/clients/new.do"><fmt:message key="label.add"/></a></li>
                 </ul>
             </li>
         </ul>

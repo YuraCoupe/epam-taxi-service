@@ -34,7 +34,7 @@ public class CarValidator {
         }
 
         String capacity = req.getParameter("capacity");
-        if (capacity.isBlank() || Integer.parseInt(capacity) <= 0) {
+        if (capacity == null || capacity.isBlank() || Integer.parseInt(capacity) <= 0) {
             errors.add("Capacity can not be empty");
         }
 
@@ -56,7 +56,7 @@ public class CarValidator {
                 if (carStatus.getTitle().equals("available for order") && (driverId == null || driverId.isBlank())) {
                     errors.add("Select driver for available for order car");
                 }
-            };
+            }
         }
 
         errorMessage.setErrors(errors);

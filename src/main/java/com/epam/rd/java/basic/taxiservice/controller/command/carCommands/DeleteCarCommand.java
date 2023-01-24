@@ -1,27 +1,26 @@
-package com.epam.rd.java.basic.taxiservice.controller.command.tripCommands;
+package com.epam.rd.java.basic.taxiservice.controller.command.carCommands;
 
 import com.epam.rd.java.basic.taxiservice.config.ConfigurationManager;
 import com.epam.rd.java.basic.taxiservice.controller.command.ActionCommand;
 import com.epam.rd.java.basic.taxiservice.controller.commandResult.CommandResult;
 import com.epam.rd.java.basic.taxiservice.controller.commandResult.RedirectResult;
+import com.epam.rd.java.basic.taxiservice.model.Car.Car;
 import com.epam.rd.java.basic.taxiservice.model.Trip;
-import com.epam.rd.java.basic.taxiservice.model.TripStatus;
-import com.epam.rd.java.basic.taxiservice.model.User;
+import com.epam.rd.java.basic.taxiservice.service.CarService;
 import com.epam.rd.java.basic.taxiservice.service.TripService;
-import com.epam.rd.java.basic.taxiservice.service.TripStatusService;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-public class DeleteTripCommand implements ActionCommand {
+public class DeleteCarCommand implements ActionCommand {
     @Override
     public CommandResult execute(HttpServletRequest request) {
         ServletContext ctx = request.getServletContext();
-        TripService tripService = (TripService) ctx.getAttribute("tripService");
+        CarService carService = (CarService) ctx.getAttribute("carService");
         Integer deleteId = Integer.parseInt(request.getParameter("id"));
-        Trip trip = tripService.findById(deleteId);
-        tripService.delete(trip);
-        String page = ConfigurationManager.getProperty("path.page.trips.list") + trip.getId();
+        Car car = carService.findById(deleteId);
+        carService.delete(car);
+        String page = ConfigurationManager.getProperty("path.page.cars.list") + car.getId();
         return new RedirectResult(page);
 
     }
