@@ -24,7 +24,6 @@ public class NewTripCommand implements ActionCommand {
         request.setAttribute("trip", trip);
         List<CarCategory> categories = categoryService.findAll();
         request.setAttribute("categories", categories);
-        request.setCharacterEncoding("UTF-8");
         request.setAttribute("msKey", System.getenv("MS_KEY"));
         String page = ConfigurationManager.getProperty("path.page.trips.new");
         return new ForwardResult(page);

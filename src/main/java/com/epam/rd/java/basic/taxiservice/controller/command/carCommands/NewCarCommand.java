@@ -41,7 +41,6 @@ public class NewCarCommand implements ActionCommand {
         request.setAttribute("carStatuses", carStatuses);
         List<User> freeDrivers = userService.findFreeDrivers();
         request.setAttribute("freeDrivers", freeDrivers);
-        request.setCharacterEncoding("UTF-8");
         String page = ConfigurationManager.getProperty("path.page.cars.new");
         return new ForwardResult(page);
     }

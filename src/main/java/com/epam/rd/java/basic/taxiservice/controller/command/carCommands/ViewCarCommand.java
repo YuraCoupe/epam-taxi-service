@@ -21,7 +21,6 @@ public class ViewCarCommand implements ActionCommand {
         Integer id = Integer.parseInt(request.getParameter("id"));
         Car car = carService.findById(id);
         request.setAttribute("car", car);
-        request.setCharacterEncoding("UTF-8");
         String page = ConfigurationManager.getProperty("path.page.cars.view");
         return new ForwardResult(page);
     }

@@ -40,6 +40,7 @@ public class ActionFactory {
         actionCommandMap.put("/clients/new.do", new NewClientCommand());
         actionCommandMap.put("/clients/edit.do", new EditClientCommand());
         actionCommandMap.put("/clients/save.do", new SaveClientCommand());
+        actionCommandMap.put("/clients/update.do", new UpdateClientCommand());
         actionCommandMap.put("/clients/delete.do", new DeleteClientCommand());
         actionCommandMap.put("/clients/list.do", new ViewClientsListCommand());
         actionCommandMap.put("/clients/view.do", new ViewClientCommand());

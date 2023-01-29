@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-@WebServlet(urlPatterns = "/users/*")
+//@WebServlet(urlPatterns = "/users/*")
 public class UserServlet extends HttpServlet {
     private UserService userService;
     private RoleService roleService;

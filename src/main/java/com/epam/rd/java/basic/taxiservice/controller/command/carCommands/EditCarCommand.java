@@ -40,8 +40,6 @@ public class EditCarCommand implements ActionCommand {
         List<User> freeDrivers = userService.findFreeDrivers();
         request.setAttribute("freeDrivers", freeDrivers);
 
-        request.setCharacterEncoding("UTF-8");
-
         String page = ConfigurationManager.getProperty("path.page.cars.edit");
         return new ForwardResult(page);
     }

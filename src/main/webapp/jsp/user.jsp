@@ -25,7 +25,7 @@
                 <div class="row">
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                         <div class="btn-group me-2" role="group" aria-label="Second group">
-                            <a href="/users" type="button" class="btn btn-success"><fmt:message key="label.back.to.users"/></a>
+                            <a href="/clients/view.do" type="button" class="btn btn-success"><fmt:message key="label.back.to.users"/></a>
                         </div>
                     </div>
                 </div><br>
@@ -41,7 +41,7 @@
                         <div class="panel-body" >
             </c:otherwise>
             </c:choose>
-            <form action="/users/new" method="post">
+            <form ${user.id == null ? 'action="/clients/save.do"' :'action="/clients/update.do"'}  method="post">
                 <div class="form-group">
                     <div class="row">
                          <label for="id"><fmt:message key="label.user.id"/></label><br>

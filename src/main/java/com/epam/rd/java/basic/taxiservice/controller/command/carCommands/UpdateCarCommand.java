@@ -29,7 +29,7 @@ public class UpdateCarCommand implements ActionCommand {
         CarStatusService carStatusService = (CarStatusService) ctx.getAttribute("carStatusService");
         CarValidator validator = (CarValidator) ctx.getAttribute("carValidator");
 
-        ErrorMessage errorMessage = validator.validateCar(request);
+        ErrorMessage errorMessage = validator.validate(request);
         if (!errorMessage.getErrors().isEmpty()) {
             request.setAttribute("errorMessage", errorMessage);
             String page = ConfigurationManager.getProperty("uri.page.cars.edit");

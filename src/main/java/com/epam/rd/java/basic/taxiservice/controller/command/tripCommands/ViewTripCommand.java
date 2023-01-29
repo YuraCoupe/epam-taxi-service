@@ -19,7 +19,6 @@ public class ViewTripCommand implements ActionCommand {
         Integer id = Integer.parseInt(request.getParameter("id"));
         Trip trip = tripService.findById(id);
         request.setAttribute("trip", trip);
-        request.setCharacterEncoding("UTF-8");
         String page = ConfigurationManager.getProperty("path.page.trips.view");
         return new ForwardResult(page);
     }

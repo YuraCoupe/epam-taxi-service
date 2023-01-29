@@ -1,4 +1,4 @@
-package com.epam.rd.java.basic.taxiservice.controller;
+package com.epam.rd.java.basic.taxiservice.controller.old;
 
 import com.epam.rd.java.basic.taxiservice.config.DatabaseManager;
 import com.epam.rd.java.basic.taxiservice.config.PostgresHikariProvider;

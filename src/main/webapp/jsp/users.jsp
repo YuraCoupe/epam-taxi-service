@@ -15,7 +15,7 @@
     <body>
         <c:import url="navibar.jsp"/>
         <div class="container">
-            <form action="/users">
+            <form action="/clients/view.go">
                 <div class="form-group">
                     <label for="id"><fmt:message key="label.user"/></label><br>
                     <select class="form-control" id="id" name="id">
@@ -34,7 +34,7 @@
 
             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group me-2" role="group" aria-label="Second group">
-                   <a href="/users/new" type="button" class="btn btn-primary"><fmt:message key="label.add"/></a>
+                   <a href="/clients/new.do" type="button" class="btn btn-primary"><fmt:message key="label.add"/></a>
                 </div>
             </div>
 
@@ -65,8 +65,9 @@
                         <td>
                             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                                 <div class="btn-group me-2" role="group" aria-label="Second group">
-                                     <a href="/users/${user.id}" type="button" class="btn btn-warning"><fmt:message key="label.edit"/></a>
-                                     <a href="/users?deleteId=${user.id}" type="button" class="btn btn-danger"><fmt:message key="label.remove"/></a>
+                                     <a href="/clients/view.do?id=${user.id}" type="button" class="btn btn-info"><fmt:message key="label.view"/></a>
+                                     <a href="/clients/edit.do?id=${user.id}" type="button" class="btn btn-warning"><fmt:message key="label.edit"/></a>
+                                     <a href="/clients/delete.do?id=deleteId=${user.id}" type="button" class="btn btn-danger"><fmt:message key="label.remove"/></a>
                                 </div>
                             </div>
                         </td>
@@ -75,7 +76,7 @@
                 </tbody>
             </table>
 
-            <c:import url="paginationNavibar.jsp?page=${page}&pageCount=${pageCount}"/>
+            <c:import url="paginationnavibar.jsp?page=${page}&pageCount=${pageCount}"/>
 
 
         </div>

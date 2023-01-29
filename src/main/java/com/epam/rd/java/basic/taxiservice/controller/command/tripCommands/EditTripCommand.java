@@ -1,7 +1,6 @@
 package com.epam.rd.java.basic.taxiservice.controller.command.tripCommands;
 
 import com.epam.rd.java.basic.taxiservice.config.ConfigurationManager;
-import com.epam.rd.java.basic.taxiservice.controller.TripServlet;
 import com.epam.rd.java.basic.taxiservice.controller.command.ActionCommand;
 import com.epam.rd.java.basic.taxiservice.controller.commandResult.CommandResult;
 import com.epam.rd.java.basic.taxiservice.controller.commandResult.ForwardResult;
@@ -28,7 +27,6 @@ public class EditTripCommand implements ActionCommand {
         request.setAttribute("trip", trip);
         List<CarCategory> categories = categoryService.findAll();
         request.setAttribute("categories", categories);
-        request.setCharacterEncoding("UTF-8");
         request.setAttribute("msKey", System.getenv("MS_KEY"));
         String page = ConfigurationManager.getProperty("path.page.trips.edit");
         return new ForwardResult(page);

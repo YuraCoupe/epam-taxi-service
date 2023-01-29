@@ -21,7 +21,7 @@ public class DeleteTripCommand implements ActionCommand {
         Integer deleteId = Integer.parseInt(request.getParameter("id"));
         Trip trip = tripService.findById(deleteId);
         tripService.delete(trip);
-        String page = ConfigurationManager.getProperty("path.page.trips.list") + trip.getId();
+        String page = ConfigurationManager.getProperty("path.page.trips.list");
         return new RedirectResult(page);
 
     }
