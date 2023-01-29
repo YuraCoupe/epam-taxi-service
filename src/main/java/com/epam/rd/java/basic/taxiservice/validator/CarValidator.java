@@ -19,7 +19,7 @@ public class CarValidator {
         this.carStatusRepository =carStatusRepository;
     }
 
-    public ErrorMessage validateCar(HttpServletRequest req) {
+    public ErrorMessage validate(HttpServletRequest req) {
         ErrorMessage errorMessage = new ErrorMessage();
         List<String> errors = new ArrayList<>();
 

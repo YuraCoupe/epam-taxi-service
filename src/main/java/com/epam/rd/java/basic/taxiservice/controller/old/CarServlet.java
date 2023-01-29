@@ -1,4 +1,4 @@
-package com.epam.rd.java.basic.taxiservice.controller;
+package com.epam.rd.java.basic.taxiservice.controller.old;
 
 import com.epam.rd.java.basic.taxiservice.model.Car.Car;
 import com.epam.rd.java.basic.taxiservice.model.Car.CarCategory;
@@ -12,7 +12,6 @@ import com.epam.rd.java.basic.taxiservice.validator.CarValidator;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,7 +50,7 @@ public class CarServlet extends HttpServlet {
             car.setId(carId);
         }
 
-        ErrorMessage errorMessage = validator.validateCar(req);
+        ErrorMessage errorMessage = validator.validate(req);
         if (!errorMessage.getErrors().isEmpty()) {
             req.setAttribute("errorMessage", errorMessage);
             if (Objects.nonNull(carId)) {
