@@ -5,16 +5,10 @@ import com.epam.rd.java.basic.taxiservice.controller.command.ActionCommand;
 import com.epam.rd.java.basic.taxiservice.controller.commandResult.CommandResult;
 import com.epam.rd.java.basic.taxiservice.controller.commandResult.ForwardResult;
 import com.epam.rd.java.basic.taxiservice.controller.commandResult.RedirectResult;
-import com.epam.rd.java.basic.taxiservice.model.Car.Car;
-import com.epam.rd.java.basic.taxiservice.model.Car.CarCategory;
-import com.epam.rd.java.basic.taxiservice.model.Car.CarModel;
-import com.epam.rd.java.basic.taxiservice.model.Car.CarStatus;
 import com.epam.rd.java.basic.taxiservice.model.ErrorMessage;
 import com.epam.rd.java.basic.taxiservice.model.Role;
-import com.epam.rd.java.basic.taxiservice.model.Trip;
 import com.epam.rd.java.basic.taxiservice.model.User;
 import com.epam.rd.java.basic.taxiservice.service.*;
-import com.epam.rd.java.basic.taxiservice.validator.CarValidator;
 import com.epam.rd.java.basic.taxiservice.validator.UserValidator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -37,7 +31,7 @@ public class UpdateClientCommand implements ActionCommand {
             return new ForwardResult(page);
         }
 
-        Integer userId = null;
+        Integer userId;
         User user = new User();
 
         userId = Integer.parseInt(request.getParameter("userId"));
@@ -69,7 +63,7 @@ public class UpdateClientCommand implements ActionCommand {
 
         userService.update(user);
 
-        String page = ConfigurationManager.getProperty("uri.page.clients.view") + "?id=" + userId;
+        String page = ConfigurationManager.getProperty("path.uri.clients.view") + "?id=" + userId;
         return new RedirectResult(page);
     }
 }

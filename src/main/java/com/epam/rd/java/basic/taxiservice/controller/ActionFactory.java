@@ -1,6 +1,5 @@
 package com.epam.rd.java.basic.taxiservice.controller;
 
-import com.epam.rd.java.basic.taxiservice.config.MessageManager;
 import com.epam.rd.java.basic.taxiservice.controller.command.*;
 import com.epam.rd.java.basic.taxiservice.controller.command.carCommands.*;
 import com.epam.rd.java.basic.taxiservice.controller.command.clientCommands.*;
@@ -18,6 +17,8 @@ public class ActionFactory {
         actionCommandMap = new HashMap<>();
         actionCommandMap.put("/login.do", new LoginCommand());
         actionCommandMap.put("/loginPage.do", new ViewLoginPageCommand());
+        actionCommandMap.put("/indexPage.do", new ViewIndexPageCommand());
+        actionCommandMap.put("/errorPage.do", new ViewErrorPageCommand());
 
         actionCommandMap.put("/logout.do", new LogoutCommand());
         actionCommandMap.put("/trips/new.do", new NewTripCommand());
@@ -54,14 +55,9 @@ public class ActionFactory {
     }
 
     public ActionCommand defineCommand(HttpServletRequest request) {
-        ActionCommand current = new EmptyCommand();
+        ActionCommand current;
         String action = request.getRequestURI();
-        try {
-            current = actionCommandMap.get(action);
-        } catch (IllegalArgumentException e) {
-            request.setAttribute("wrongAction", action
-                    + MessageManager.getProperty("message.wrongaction"));
-        }
-        return current;
+        current = actionCommandMap.get(action);
+        return current != null ? current : new EmptyCommand();
     }
 }

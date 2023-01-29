@@ -12,7 +12,6 @@ import com.epam.rd.java.basic.taxiservice.model.Car.CarCategory;
 import com.epam.rd.java.basic.taxiservice.model.Car.CarStatus;
 import com.epam.rd.java.basic.taxiservice.service.*;
 import com.epam.rd.java.basic.taxiservice.validator.TripValidator;
-import com.epam.rd.java.basic.taxiservice.validator.UserValidator;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +20,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 
 public class SaveTripCommand implements ActionCommand {
     @Override
@@ -43,7 +41,7 @@ public class SaveTripCommand implements ActionCommand {
         ErrorMessage errorMessage = validator.validate(request);
         if (!errorMessage.getErrors().isEmpty()) {
             request.setAttribute("errorMessage", errorMessage);
-            String page = ConfigurationManager.getProperty("uri.page.trips.new");
+            String page = ConfigurationManager.getProperty("path.uri.trips.new");
             return new ForwardResult(page);
         }
 
@@ -57,7 +55,7 @@ public class SaveTripCommand implements ActionCommand {
                 cars.add(carService.findOneByCategoryAndCapacity(category.getTitle(), capacity));
             } catch (CarNotFoundException e) {
                 request.setAttribute("noCarAvailable", "true");
-                String page = ConfigurationManager.getProperty("uri.page.trips.new");
+                String page = ConfigurationManager.getProperty("path.uri.trips.new");
                 return new ForwardResult(page);
             }
         } else {
@@ -68,7 +66,7 @@ public class SaveTripCommand implements ActionCommand {
                 cars.addAll(carService.findSeveralByCategoryAndCapacity(category.getTitle(), capacity));
             } catch (CarNotFoundException e) {
                 request.setAttribute("noCarAvailable", "true");
-                String page = ConfigurationManager.getProperty("uri.page.trips.new");
+                String page = ConfigurationManager.getProperty("path.uri.trips.new");
                 return new ForwardResult(page);
             }
         }
@@ -108,7 +106,7 @@ public class SaveTripCommand implements ActionCommand {
 
         request.getSession().setAttribute("activeTripId", tripId);
 
-        String page = ConfigurationManager.getProperty("uri.page.trips.view") + "?id=" + tripId;
+        String page = ConfigurationManager.getProperty("path.uri.trips.view") + "?id=" + tripId;
         return new RedirectResult(page);
     }
 }

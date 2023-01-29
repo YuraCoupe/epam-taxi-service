@@ -28,7 +28,7 @@ public class StartTripCommand implements ActionCommand {
         TripStatus status = tripStatusService.findByTitle("Processing");
         trip.setStatus(status);
         tripService.update(trip);
-        String page = ConfigurationManager.getProperty("uri.page.trips.view") + "?id=" + tripId;
+        String page = ConfigurationManager.getProperty("path.uri.trips.view") + "?id=" + tripId;
         return new RedirectResult(page);
 
     }

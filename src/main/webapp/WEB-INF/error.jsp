@@ -10,8 +10,13 @@
     <body>
         <c:import url="navibar.jsp"/>
         <div class="container">
-            Welcome to Taxi Service.<br>
-            Use navigation bar to proceed.
+            Request from ${pageContext.errorData.requestURI} is failed
+            <br/>
+            Servlet name or type: ${pageContext.errorData.servletName}
+            <br/>
+            Status code: ${pageContext.errorData.statusCode}
+            <br/>
+            Exception: ${pageContext.errorData.throwable}
         </div>
     </body>
 </html>

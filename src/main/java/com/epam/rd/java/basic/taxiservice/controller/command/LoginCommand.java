@@ -65,7 +65,7 @@ public class LoginCommand implements ActionCommand {
             session.setAttribute("isLoggedIn", true);
             session.setAttribute("phoneNumber", phoneNumber);
             session.setAttribute("user", userFromDB);
-            page = ConfigurationManager.getProperty("uri.page.trips.list");
+            page = ConfigurationManager.getProperty("path.uri.trips.list");
             return new RedirectResult(page);
         }else{
             errorMessage.setErrors(List.of("Wrong phone number or password. Please, try again"));
