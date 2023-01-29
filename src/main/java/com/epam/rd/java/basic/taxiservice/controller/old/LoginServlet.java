@@ -1,4 +1,4 @@
-package com.epam.rd.java.basic.taxiservice.controller;
+package com.epam.rd.java.basic.taxiservice.controller.old;
 
 import com.epam.rd.java.basic.taxiservice.exception.UserNotFoundException;
 import com.epam.rd.java.basic.taxiservice.model.ErrorMessage;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet({"/login"})
+//@WebServlet({"/login"})
 public class LoginServlet extends HttpServlet {
     private UserValidator userValidator;
     private UserService userService;

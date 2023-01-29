@@ -38,7 +38,8 @@ public class TripRepository {
                     "FROM trip t\n" +
                     "JOIN person p ON p.id = t.person_id\n" +
                     "JOIN car_category c ON c.id = category_id\n" +
-                    "JOIN trip_status s ON s.id = status_id;";
+                    "JOIN trip_status s ON s.id = status_id" +
+                    "ORDER BY open_time DESC;";
     private static final String FIND_ALL_WITH_OFFSET_AND_LIMIT =
             "SELECT t.id, t.person_id, p.phone_number AS phone_number, p.first_name AS first_name, \n" +
                     "p.last_name AS last_name, departure_address, destination_address, \n" +
@@ -48,6 +49,7 @@ public class TripRepository {
                     "JOIN person p ON p.id = t.person_id\n" +
                     "JOIN car_category c ON c.id = category_id\n" +
                     "JOIN trip_status s ON s.id = status_id\n" +
+                    "ORDER BY open_time DESC\n" +
                     "OFFSET ? LIMIT ?;";
     private static final String GET_TOTAL_NUMBER =
             "SELECT COUNT (*) as number\n" +
@@ -85,6 +87,7 @@ public class TripRepository {
                     "JOIN car_category c ON c.id = category_id\n" +
                     "JOIN trip_status s ON s.id = status_id\n" +
                     "WHERE t.person_id = ?\n" +
+                    "ORDER BY open_time DESC\n" +
                     "OFFSET ? LIMIT ?;";
     private static final String FIND_BY_DRIVER_ID_WITH_OFFSET_AND_LIMIT =
             "SELECT t.id, t.person_id, p.phone_number AS phone_number, p.first_name AS first_name,\n" +
@@ -98,6 +101,7 @@ public class TripRepository {
                     "JOIN trip_car tc ON tc.trip_id = t.id\n" +
                     "JOIN car ON car.id = tc.car_id\n" +
                     "WHERE car.driver_id = ?\n" +
+                    "ORDER BY open_time DESC\n" +
                     "OFFSET ? LIMIT ?;";
 
     private static final String INSERT_TRIP_CAR =
@@ -114,7 +118,8 @@ public class TripRepository {
                     "JOIN person p ON p.id = t.person_id\n" +
                     "JOIN car_category c ON c.id = category_id\n" +
                     "JOIN trip_status s ON s.id = status_id\n" +
-                    "WHERE p.id = ? AND s.title <> 'Completed';";
+                    "WHERE p.id = ? AND s.title <> 'Completed'\n" +
+                    "ORDER BY open_time DESC;";
 
     private static final String FIND_ACTIVE_TRIP_BY_DRIVER_ID =
             "SELECT t.id, t.person_id, p.phone_number AS phone_number, p.first_name AS first_name, \n" +
@@ -127,7 +132,8 @@ public class TripRepository {
                     "JOIN trip_status s ON s.id = status_id\n" +
                     "JOIN trip_car tc ON tc.trip_id = t.id\n" +
                     "JOIN car ON car.id = tc.car_id\n" +
-                    "WHERE car.driver_id = ? AND s.title != 'Completed' AND car.current_trip_id IS NOT NULL;";
+                    "WHERE car.driver_id = ? AND s.title != 'Completed' AND car.current_trip_id IS NOT NULL\n" +
+                    "ORDER BY open_time DESC;";
 
     private final DatabaseManager databaseManager;
 

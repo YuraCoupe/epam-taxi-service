@@ -1,4 +1,4 @@
-package com.epam.rd.java.basic.taxiservice.controller;
+package com.epam.rd.java.basic.taxiservice.controller.old;
 
 import com.epam.rd.java.basic.taxiservice.exception.CarNotFoundException;
 import com.epam.rd.java.basic.taxiservice.model.*;
@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.*;
 
-@WebServlet(urlPatterns = "/trips/*")
+//@WebServlet(urlPatterns = "/trips/*")
 public class TripServlet extends HttpServlet {
     private TripService tripService;
     private UserService userService;
@@ -278,7 +278,7 @@ public class TripServlet extends HttpServlet {
         req.setAttribute("categories", categories);
         req.setCharacterEncoding("UTF-8");
         req.setAttribute("msKey", System.getenv("MS_KEY"));
-        req.getRequestDispatcher("/jsp/trip2.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/trip.jsp").forward(req, resp);
     }
 
     private void handleId(Integer id, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -293,7 +293,7 @@ public class TripServlet extends HttpServlet {
         Trip trip = tripService.findById(id);
         req.setAttribute("trip", trip);
         req.setCharacterEncoding("UTF-8");
-        req.getRequestDispatcher("/jsp/tripview.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/tripView.jsp").forward(req, resp);
 
     }
 }

@@ -12,39 +12,39 @@
         <ul class="nav navbar-nav">
             <li><a href="/"><fmt:message key="label.main"/></a></li>
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="/trips">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="/trips/list.do">
                     <fmt:message key="label.trips"/><span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="/trips/list"><fmt:message key="label.list"/></a></li>
-                    <li><a href="/trips/new"><fmt:message key="label.create"/></a></li>
+                    <li><a href="/trips/list.do"><fmt:message key="label.list"/></a></li>
+                    <li><a href="/trips/new.do"><fmt:message key="label.create"/></a></li>
                 </ul>
             </li>
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="/cars">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="/cars/list.do">
                     <fmt:message key="label.cars"/><span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="/cars"><fmt:message key="label.list"/></a></li>
-                    <li><a href="/cars/new"><fmt:message key="label.add"/></a></li>
+                    <li><a href="/cars/list.do"><fmt:message key="label.list"/></a></li>
+                    <li><a href="/cars/new.do"><fmt:message key="label.add"/></a></li>
                 </ul>
                 </li>
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="/drivers/list.do">
                     <fmt:message key="label.drivers"/><span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="/drivers"><fmt:message key="label.list"/></a></li>
-                    <li><a href="/drivers/new"><fmt:message key="label.add"/></a></li>
+                    <li><a href="/drivers/list.do"><fmt:message key="label.list"/></a></li>
+                    <li><a href="/drivers/new.do"><fmt:message key="label.add"/></a></li>
                 </ul>
             </li>
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="/clients/list.do">
                     <fmt:message key="label.users"/><span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="/users"><fmt:message key="label.list"/></a></li>
-                    <li><a href="/users/new"><fmt:message key="label.add"/></a></li>
+                    <li><a href="/clients/list.do"><fmt:message key="label.list"/></a></li>
+                    <li><a href="/clients/new.do"><fmt:message key="label.add"/></a></li>
                 </ul>
             </li>
         </ul>
@@ -62,7 +62,7 @@
                 </form>
             </li>
             <li>
-                <a style="float: right" href="/logout">Logout</a>
+                <a style="float: right" href="/logout.do">Logout</a>
             </li>
         </ul>
     </div>

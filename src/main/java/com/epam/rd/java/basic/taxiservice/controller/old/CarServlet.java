@@ -1,4 +1,4 @@
-package com.epam.rd.java.basic.taxiservice.controller;
+package com.epam.rd.java.basic.taxiservice.controller.old;
 
 import com.epam.rd.java.basic.taxiservice.model.Car.Car;
 import com.epam.rd.java.basic.taxiservice.model.Car.CarCategory;
@@ -12,14 +12,13 @@ import com.epam.rd.java.basic.taxiservice.validator.CarValidator;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
-@WebServlet(urlPatterns = "/cars/*")
+//@WebServlet(urlPatterns = "/cars/*")
 public class CarServlet extends HttpServlet {
     private CarService carService;
     private CarModelService carModelService;
@@ -51,7 +50,7 @@ public class CarServlet extends HttpServlet {
             car.setId(carId);
         }
 
-        ErrorMessage errorMessage = validator.validateCar(req);
+        ErrorMessage errorMessage = validator.validate(req);
         if (!errorMessage.getErrors().isEmpty()) {
             req.setAttribute("errorMessage", errorMessage);
             if (Objects.nonNull(carId)) {
@@ -78,7 +77,7 @@ public class CarServlet extends HttpServlet {
         car.setLicensePlate(licensePlate);
 
         String driverIdString = req.getParameter("driverId");
-        Integer driverId;
+        int driverId;
         User driver = new User();
         if (driverIdString != null && !driverIdString.isBlank()) {
             driverId = Integer.parseInt(driverIdString);

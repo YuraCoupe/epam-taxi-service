@@ -22,11 +22,11 @@
             <div class="row">
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group me-2" role="group" aria-label="Second group">
-                        <a href="/cars" type="button" class="btn btn-success"><fmt:message key="label.back.to.cars"/></a>
+                        <a href="/cars/list.do" type="button" class="btn btn-success"><fmt:message key="label.back.to.cars"/></a>
                     </div>
                 </div>
             </div><br>
-            <form action="/cars" method="post">
+            <form ${car.id == null ? 'action="/cars/save.do"' :'action="/cars/update.do"'}  method="post">
                 <div class="form-group">
                     <div class="row">
                         <label for="id"><fmt:message key="label.car.id"/></label><br>

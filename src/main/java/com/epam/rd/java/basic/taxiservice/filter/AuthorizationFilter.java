@@ -11,23 +11,45 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@WebFilter(filterName = "authorizationFilter", urlPatterns = "/*")
+@WebFilter(filterName = "authorizationFilter")
 public class AuthorizationFilter implements Filter {
 
     private static final Map<String, List<String>> ROLE_PATH_MAP;
     private static final String ANY_PATH = "/*";
     private static final String TRIP_PATH = "/trips";
+    private static final String TRIP_LIST_PATH = "/trips/list.do";
+    private static final String TRIP_VIEW_PATH = "/trips/view.do";
+    private static final String TRIP_NEW_PATH = "/trips/new.do";
+    private static final String TRIP_EDIT_PATH = "/trips/edit.do";
+    private static final String TRIP_SAVE_PATH = "/trips/save.do";
+    private static final String TRIP_START_PATH = "/trips/start.do";
+    private static final String TRIP_FINISH_PATH = "/trips/finish.do";
+    private static final String TRIP_DELETE_PATH = "/trips/delete.do";
     private static final String CAR_PATH = "/cars";
     private static final String INDEX_PATH = "/";
-    private static final String LOGOUT_PATH = "/logout";
+    private static final String LOGOUT_PATH = "/logout.do";
     private static final String CLIENT_ROLE = "ROLE_CLIENT";
     private static final String DRIVER_ROLE = "ROLE_DRIVER";
     private static final String ADMIN_ROLE = "ROLE_ADMINISTRATOR";
 
     static {
 
-        List<String> CLIENT_ROLE_LIST = List.of(TRIP_PATH, LOGOUT_PATH, INDEX_PATH);
-        List<String> DRIVER_ROLE_LIST = List.of(TRIP_PATH, CAR_PATH, LOGOUT_PATH, INDEX_PATH);
+        List<String> CLIENT_ROLE_LIST = List.of(
+                TRIP_PATH,
+                TRIP_LIST_PATH,
+                TRIP_VIEW_PATH,
+                TRIP_NEW_PATH,
+                TRIP_SAVE_PATH,
+                LOGOUT_PATH,
+                INDEX_PATH);
+        List<String> DRIVER_ROLE_LIST = List.of(
+                TRIP_PATH,
+                TRIP_VIEW_PATH,
+                TRIP_LIST_PATH,
+                TRIP_START_PATH,
+                TRIP_FINISH_PATH,
+                LOGOUT_PATH,
+                INDEX_PATH);
         List<String> ADMIN_ROLE_LIST = List.of(ANY_PATH);
 
         ROLE_PATH_MAP = Map.of(
@@ -44,7 +66,7 @@ public class AuthorizationFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
 
         String action = req.getRequestURI();
-        if ("/login".equals(action) || "/login.jsp".equals(action) || "/users/new".equals(action)) {
+        if("/login.do".equals(action) || "/loginPage.do".equals(action) || "/jsp/login.jsp".equals(action) || "/users/new.do".equals(action)){
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             Object isLoggedObj = req.getSession().getAttribute("isLoggedIn");
@@ -61,7 +83,7 @@ public class AuthorizationFilter implements Filter {
                         return;
                     }
                 }
-                String path = "/login";
+                String path = "/loginPage.do";
                 resp.sendRedirect(path);
             }
         }

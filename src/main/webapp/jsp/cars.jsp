@@ -15,7 +15,7 @@
     <body>
         <c:import url="navibar.jsp"/>
         <div class="container">
-            <form action="/cars">
+            <form action="/cars/view.do">
                 <div class="form-group">
                     <label for="id"><fmt:message key="label.car"/></label><br>
                     <select class="form-control" id="id" name="id">
@@ -34,7 +34,7 @@
 
             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group me-2" role="group" aria-label="Second group">
-                   <a href="/cars/new" type="button" class="btn btn-primary"><fmt:message key="label.add"/></a>
+                   <a href="/cars/new.do" type="button" class="btn btn-primary"><fmt:message key="label.add"/></a>
                 </div>
             </div>
 
@@ -78,8 +78,8 @@
                         <td>
                             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                                 <div class="btn-group me-2" role="group" aria-label="Second group">
-                                     <a href="/cars/${car.id}" type="button" class="btn btn-warning"><fmt:message key="label.edit"/></a>
-                                     <a href="/cars?deleteId=${car.id}" type="button" class="btn btn-danger"><fmt:message key="label.remove"/></a>
+                                     <a href="/cars/edit.do?id=${car.id}" type="button" class="btn btn-warning"><fmt:message key="label.edit"/></a>
+                                     <a href="/cars/delete.do?id=${car.id}" type="button" class="btn btn-danger"><fmt:message key="label.remove"/></a>
                                 </div>
                             </div>
                         </td>
