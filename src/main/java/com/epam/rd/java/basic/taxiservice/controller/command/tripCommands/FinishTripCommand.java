@@ -58,7 +58,7 @@ public class FinishTripCommand implements ActionCommand {
             tripService.update(trip);
         }
 
-        String page = ConfigurationManager.getProperty("uri.page.trips.view") + "?id=" + tripId;
+        String page = ConfigurationManager.getProperty("path.uri.trips.view") + "?id=" + tripId;
         return new RedirectResult(page);
     }
 }

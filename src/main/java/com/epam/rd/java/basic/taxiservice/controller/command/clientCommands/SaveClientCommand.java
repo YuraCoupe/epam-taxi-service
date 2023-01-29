@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.util.Objects;
 
 public class SaveClientCommand implements ActionCommand {
 
@@ -28,13 +27,13 @@ public class SaveClientCommand implements ActionCommand {
         RoleService roleService = (RoleService) ctx.getAttribute("roleService");
         PasswordEncoder passwordEncoder = (PasswordEncoder) ctx.getAttribute("passwordEncoder");
 
-        Integer userId = null;
+        Integer userId;
         User user = new User();
 
         ErrorMessage errorMessage = validator.validate(request);
         if (!errorMessage.getErrors().isEmpty()) {
             request.setAttribute("errorMessage", errorMessage);
-            String page = ConfigurationManager.getProperty("uri.page.clients.new");
+            String page = ConfigurationManager.getProperty("path.uri.clients.new");
             return new ForwardResult(page);
         }
         String phoneNumber = request.getParameter("phoneNumber");
@@ -57,7 +56,7 @@ public class SaveClientCommand implements ActionCommand {
             user.setRole(role);
         }
         userId = userService.save(user);
-        String page = ConfigurationManager.getProperty("uri.page.clients.view") + "?id=" + userId;
+        String page = ConfigurationManager.getProperty("path.uri.clients.view") + "?id=" + userId;
         return new RedirectResult(page);
     }
 }

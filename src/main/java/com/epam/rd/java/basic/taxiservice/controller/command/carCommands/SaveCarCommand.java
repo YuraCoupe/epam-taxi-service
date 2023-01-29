@@ -30,7 +30,7 @@ public class SaveCarCommand implements ActionCommand {
         ErrorMessage errorMessage = validator.validate(request);
         if (!errorMessage.getErrors().isEmpty()) {
             request.setAttribute("errorMessage", errorMessage);
-            String page = ConfigurationManager.getProperty("uri.page.cars.new");
+            String page = ConfigurationManager.getProperty("path.uri.cars.new");
             return new ForwardResult(page);
         }
 
@@ -69,7 +69,7 @@ public class SaveCarCommand implements ActionCommand {
 
         carId = carService.save(car);
 
-        String page = ConfigurationManager.getProperty("uri.page.cars.view") + "?id=" + carId;
+        String page = ConfigurationManager.getProperty("path.uri.cars.view") + "?id=" + carId;
         return new RedirectResult(page);
     }
 }

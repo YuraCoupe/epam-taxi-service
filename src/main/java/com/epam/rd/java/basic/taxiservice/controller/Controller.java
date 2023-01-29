@@ -27,7 +27,7 @@ public class Controller extends HttpServlet {
             disp.forward(request, response);
         });
         views.put(RedirectResult.class, (result, request, response) -> {
-            response.sendRedirect(request.getContextPath() + result.getResource());
+            response.sendRedirect(result.getResource());
         });
     }
 

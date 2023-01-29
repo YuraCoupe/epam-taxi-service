@@ -7,10 +7,10 @@ import com.epam.rd.java.basic.taxiservice.controller.commandResult.RedirectResul
 
 import javax.servlet.http.HttpServletRequest;
 
-public class ViewLoginPageCommand implements ActionCommand {
+public class ViewIndexPageCommand implements ActionCommand {
     @Override
     public CommandResult execute(HttpServletRequest request) {
-        String page = ConfigurationManager.getProperty("path.page.login");
+        String page = ConfigurationManager.getProperty("path.page.index");
         return new ForwardResult(page);
     }
 }

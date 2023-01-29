@@ -74,7 +74,7 @@ public class UpdateCarCommand implements ActionCommand {
 
         carService.update(car);
 
-        String page = ConfigurationManager.getProperty("uri.page.cars.view") + "?id=" + carId;
+        String page = ConfigurationManager.getProperty("path.uri.cars.view") + "?id=" + carId;
         return new RedirectResult(page);
     }
 }
