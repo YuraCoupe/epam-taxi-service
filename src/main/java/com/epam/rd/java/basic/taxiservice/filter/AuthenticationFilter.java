@@ -22,10 +22,14 @@ public class AuthenticationFilter implements Filter {
         final String LOGIN_URI = ConfigurationManager.getProperty("path.uri.login");
         final String NEW_USER_URI = ConfigurationManager.getProperty("path.uri.clients.new");
         final String SAVE_USER_URI = ConfigurationManager.getProperty("path.uri.clients.save");
+        final String JPG_URI = "*.jpg";
+        final String ICO_URI = "*.ico";
 
 
         String action = req.getRequestURI();
         if (HOME_URI.equals(action)
+                || JPG_URI.equals(action)
+                || ICO_URI.equals(action)
                 || INDEX_URI.equals(action)
                 || LOGIN_PAGE_URI.equals(action)
                 || LOGIN_URI.equals(action)
