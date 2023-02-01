@@ -1,8 +1,6 @@
 package com.epam.rd.java.basic.taxiservice.repository;
 
 import com.epam.rd.java.basic.taxiservice.config.DatabaseManager;
-import com.epam.rd.java.basic.taxiservice.model.Car.CarStatus;
-import com.epam.rd.java.basic.taxiservice.model.Trip;
 import com.epam.rd.java.basic.taxiservice.model.TripStatus;
 
 import java.sql.*;
@@ -109,7 +107,7 @@ public class TripStatusRepository {
     private Optional<TripStatus> mapToOne(ResultSet resultSet) throws SQLException {
         TripStatus status = null;
         while (resultSet.next()) {
-            status = getTripStatusFromResultSet(resultSet);
+            status = getEntityFromResultSet(resultSet);
         }
         return Optional.ofNullable(status);
     }
@@ -117,13 +115,13 @@ public class TripStatusRepository {
     private List<TripStatus> mapToMany(ResultSet resultSet) throws SQLException {
         List<TripStatus> tripStatuses = new ArrayList<>();
         while (resultSet.next()) {
-            TripStatus status = getTripStatusFromResultSet(resultSet);
+            TripStatus status = getEntityFromResultSet(resultSet);
             tripStatuses.add(status);
         }
         return tripStatuses;
     }
 
-    private TripStatus getTripStatusFromResultSet(ResultSet resultSet) throws SQLException {
+    private TripStatus getEntityFromResultSet(ResultSet resultSet) throws SQLException {
         TripStatus status = new TripStatus();
         status.setId(Integer.parseInt(resultSet.getString("id")));
         status.setTitle(resultSet.getString("title"));

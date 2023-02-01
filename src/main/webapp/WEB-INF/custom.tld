@@ -1,0 +1,25 @@
+<taglib>
+    <tlib-version>2.0</tlib-version>
+    <jsp-version>2.0</jsp-version>
+    <short-name>ctg</short-name>
+    <display-name>TaxiServiceCustomTagsLibrary</display-name>
+
+
+    <tag>
+        <name>pagination</name>
+        <tag-class>com.epam.rd.java.basic.taxiservice.tag.PaginationNavbarTag</tag-class>
+        <body-content>empty</body-content>
+
+        <attribute>
+            <name>page</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>pageCount</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+    </tag>
+</taglib>

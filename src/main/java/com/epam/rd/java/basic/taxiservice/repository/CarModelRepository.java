@@ -135,7 +135,7 @@ public class CarModelRepository {
     private Optional<CarModel> mapToOne(ResultSet resultSet) throws SQLException {
         CarModel carModel = null;
         while (resultSet.next()) {
-            carModel = getCarModelFromResultSet(resultSet);
+            carModel = getEntityFromResultSet(resultSet);
         }
         return Optional.ofNullable(carModel);
     }
@@ -143,13 +143,13 @@ public class CarModelRepository {
     private List<CarModel> mapToMany(ResultSet resultSet) throws SQLException {
         List<CarModel> carModels = new ArrayList<>();
         while (resultSet.next()) {
-            CarModel model = getCarModelFromResultSet(resultSet);
+            CarModel model = getEntityFromResultSet(resultSet);
             carModels.add(model);
         }
         return carModels;
     }
 
-    private CarModel getCarModelFromResultSet(ResultSet resultSet) throws SQLException {
+    private CarModel getEntityFromResultSet(ResultSet resultSet) throws SQLException {
         CarModel carModel = new CarModel();
         carModel.setId(Integer.parseInt(resultSet.getString("model_id")));
         carModel.setBrand(resultSet.getString("brand_title"));

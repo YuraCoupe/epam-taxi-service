@@ -4,17 +4,18 @@ import com.epam.rd.java.basic.taxiservice.model.Car.Car;
 import com.epam.rd.java.basic.taxiservice.model.Car.CarCategory;
 import com.epam.rd.java.basic.taxiservice.model.Car.CarStatus;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Set;
 
 public class Trip {
     private Integer id;
     private User user;
-    private Address departureAddress;
-    private Address destinationAddress;
+    private String departureAddress;
+    private String destinationAddress;
     private Integer numberOfPassengers;
     private CarCategory category;
-    private Double price;
+    private BigDecimal price;
     private TripStatus status;
     private Timestamp openTime;
     private Timestamp closeTime;
@@ -37,19 +38,19 @@ public class Trip {
         this.user = user;
     }
 
-    public Address getDepartureAddress() {
+    public String getDepartureAddress() {
         return departureAddress;
     }
 
-    public void setDepartureAddress(Address departureAddress) {
+    public void setDepartureAddress(String departureAddress) {
         this.departureAddress = departureAddress;
     }
 
-    public Address getDestinationAddress() {
+    public String getDestinationAddress() {
         return destinationAddress;
     }
 
-    public void setDestinationAddress(Address destinationAddress) {
+    public void setDestinationAddress(String destinationAddress) {
         this.destinationAddress = destinationAddress;
     }
 
@@ -69,11 +70,11 @@ public class Trip {
         this.category = category;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

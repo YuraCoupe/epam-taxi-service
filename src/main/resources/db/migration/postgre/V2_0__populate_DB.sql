@@ -224,4 +224,9 @@ JOIN car_status s ON s.id = car.status_id
 ORDER BY s.title;
 */
 
+/*SELECT id, MAX(money_spent), discount
+FROM discount_rate
+WHERE money_spent = (SELECT MAX(money_spent) FROM discount_rate WHERE money_spent < '6500')
+GROUP BY id;
+*/
 

@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public class CarRepository {
     private static final String INSERT =
-            "INSERT INTO car (model_id, capacity, category_id, status_id, license_plate)\n" +
+            "INSERT INTO car (model_id, capacity, category_id, status_id, license_plate, driver_id)\n" +
                     "VALUES\n" +
                     "(?, ?, ?, ?, ?, ?);";
     private static final String UPDATE =
@@ -155,8 +155,7 @@ public class CarRepository {
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();
-            Integer id = resultSet.getInt(1);
-            return id;
+            return resultSet.getInt(1);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -297,7 +296,7 @@ public class CarRepository {
     private Optional<Car> mapToOne(ResultSet resultSet) throws SQLException {
         Car car = null;
         while (resultSet.next()) {
-            car = getCarFromResultSet(resultSet);
+            car = getEntityFromResultSet(resultSet);
         }
         return Optional.ofNullable(car);
     }
@@ -305,13 +304,13 @@ public class CarRepository {
     private List<Car> mapToMany(ResultSet resultSet) throws SQLException {
         List<Car> cars = new ArrayList<>();
         while (resultSet.next()) {
-            Car car = getCarFromResultSet(resultSet);
+            Car car = getEntityFromResultSet(resultSet);
             cars.add(car);
         }
         return cars;
     }
 
-    private Car getCarFromResultSet(ResultSet resultSet) throws SQLException {
+    private Car getEntityFromResultSet(ResultSet resultSet) throws SQLException {
         Car car = new Car();
         CarModel carModel = new CarModel();
         CarCategory category = new CarCategory();
@@ -330,7 +329,7 @@ public class CarRepository {
         car.setStatus(status);
         car.setLicensePlate(resultSet.getString("license_plate"));
 
-        Integer driverId = resultSet.getInt("driver_id");
+        int driverId = resultSet.getInt("driver_id");
         if (!resultSet.wasNull()) {
             User driver = new User();
             driver.setId(driverId);

@@ -1,12 +1,11 @@
 package com.epam.rd.java.basic.taxiservice.validator;
 
-import com.epam.rd.java.basic.taxiservice.model.Address;
+import com.epam.rd.java.basic.taxiservice.model.BingRoute;
 import com.epam.rd.java.basic.taxiservice.model.Car.CarCategory;
 import com.epam.rd.java.basic.taxiservice.model.ErrorMessage;
-import com.epam.rd.java.basic.taxiservice.repository.AddressRepository;
 import com.epam.rd.java.basic.taxiservice.repository.CarCategoryRepository;
-import com.epam.rd.java.basic.taxiservice.repository.CarRepository;
 import com.epam.rd.java.basic.taxiservice.repository.TripRepository;
+import com.epam.rd.java.basic.taxiservice.service.BingMapsService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -16,45 +15,50 @@ import java.util.Optional;
 public class TripValidator {
 
     private final TripRepository tripRepository;
-    private final AddressRepository addressRepository;
     private final CarCategoryRepository categoryRepository;
+    private final BingMapsService bingMapsService;
 
-    public TripValidator(TripRepository tripRepository, AddressRepository addressRepository, CarCategoryRepository categoryRepository) {
+    public TripValidator(TripRepository tripRepository, CarCategoryRepository categoryRepository, BingMapsService bingMapsService) {
         this.tripRepository = tripRepository;
-        this.addressRepository = addressRepository;
         this.categoryRepository = categoryRepository;
+        this.bingMapsService = bingMapsService;
     }
 
     public ErrorMessage validate(HttpServletRequest req) {
         ErrorMessage errorMessage = new ErrorMessage();
         List<String> errors = new ArrayList<>();
 
-        String departureAddressIdString = req.getParameter("departureAddressId");
-        if (departureAddressIdString == null || departureAddressIdString.isBlank()) {
+        String departureAddress = req.getParameter("departureAddress");
+        String destinationAddress = req.getParameter("destinationAddress");
+
+
+        if (departureAddress == null || departureAddress.isBlank()) {
             errors.add("Departure address can not be empty");
-        } else {
-            Integer departureAddressId = Integer.parseInt(departureAddressIdString);
-            Optional<Address> departureAddress = addressRepository.findById(departureAddressId);
-            if (departureAddress.isEmpty()) {
-                errors.add("This departure address doesn't exist");
+        }
+        if (destinationAddress == null || destinationAddress.isBlank()) {
+            errors.add("Destination address can not be empty");
+        }
+        if (departureAddress != null && !departureAddress.isBlank()
+                && destinationAddress != null && !destinationAddress.isBlank()) {
+            BingRoute bingRoute = bingMapsService.getRoute(departureAddress, destinationAddress);
+
+            if (bingRoute.getStatusCode() != 200) {
+                errors.addAll(bingRoute.getErrorMessage().getErrors());
+            } else {
+                if (bingRoute.getStartLocation().equals("Kyiv, Ukraine")) {
+                    errors.add("Departure address doesn't exist");
+                }
+                if (bingRoute.getEndLocation().equals("Kyiv, Ukraine")) {
+                    errors.add("Destination address doesn't exist");
+                }
             }
         }
 
-        String destinationAddressIdString = req.getParameter("destinationAddressId");
-        if (destinationAddressIdString == null || destinationAddressIdString.isBlank()) {
-            errors.add("Destination address can not be empty");
-        } else {
-            Integer destinationAddressId = Integer.parseInt(destinationAddressIdString);
-            Optional<Address> destinationAddress = addressRepository.findById(destinationAddressId);
-            if (destinationAddress.isEmpty()) {
-                errors.add("This destination address doesn't exist");
-            }
-        }
         String numberOfPassengersString = req.getParameter("passengersNumber");
         if (numberOfPassengersString == null || numberOfPassengersString.isBlank()) {
             errors.add("Number of passengers can not be empty");
         } else {
-            Integer numberOfPassengers = Integer.parseInt(numberOfPassengersString);
+            int numberOfPassengers = Integer.parseInt(numberOfPassengersString);
             if (numberOfPassengers < 1 || numberOfPassengers > 7) {
                 errors.add("Number of passengers should be from 1 to 7");
             }
@@ -71,7 +75,7 @@ public class TripValidator {
             }
         }
 
-            errorMessage.setErrors(errors);
-            return errorMessage;
-        }
+        errorMessage.setErrors(errors);
+        return errorMessage;
     }
+}

@@ -87,8 +87,8 @@ CREATE TABLE trip_status (
 CREATE TABLE trip (
 	id SERIAL PRIMARY KEY,
     perso_id integer REFERENCES person (id) NOT NULL,
-    dep_address_id integer REFERENCES address (id) NOT NULL,
-    dest_address_id integer REFERENCES address (id) NOT NULL,
+    departure_address varchar(200) NOT NULL,
+    destination_address varchar(200) NOT NULL,
     number_of_passengers numeric NOT NULL,
     category_id integer REFERENCES car_category (id) NOT NULL,
     price numeric(2) NOT NULL,

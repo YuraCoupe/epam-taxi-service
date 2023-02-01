@@ -1,5 +1,7 @@
 package com.epam.rd.java.basic.taxiservice.model;
 
+import java.math.BigDecimal;
+
 public class User {
     private Integer id;
     private String phoneNumber;
@@ -7,7 +9,7 @@ public class User {
     private Role role;
     private String firstName;
     private String lastName;
-    private Double sumSpent;
+    private BigDecimal sumSpent;
     private Integer discountRate;
 
     public Integer getId() {
@@ -58,11 +60,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public Double getSumSpent() {
+    public BigDecimal getSumSpent() {
         return sumSpent;
     }
 
-    public void setSumSpent(double sumSpent) {
+    public void setSumSpent(BigDecimal sumSpent) {
         this.sumSpent = sumSpent;
     }
 
