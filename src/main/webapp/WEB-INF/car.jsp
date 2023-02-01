@@ -17,7 +17,7 @@
 
     <body>
 
-        <c:import url="navibar.jsp"/>
+        <c:import url="navbar.jsp"/>
         <div class="container">
             <div class="row">
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">

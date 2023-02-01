@@ -17,7 +17,7 @@
 
     <body>
         <c:if test = "${isLoggedIn == true}">
-            <c:import url="navibar.jsp"/>
+            <c:import url="navbar.jsp"/>
         </c:if>
         <div class="container">
             <c:choose>

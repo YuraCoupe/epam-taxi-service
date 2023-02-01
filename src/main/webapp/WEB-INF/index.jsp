@@ -14,7 +14,7 @@
     </head>
 
     <body>
-        <c:import url="navibar.jsp"/>
+        <c:import url="navbar.jsp"/>
 
         <div class="container">
             <c:choose>

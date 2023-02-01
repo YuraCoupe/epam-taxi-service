@@ -8,7 +8,7 @@
     </head>
 
     <body>
-        <c:import url="navibar.jsp"/>
+        <c:import url="navbar.jsp"/>
         <div class="container">
             Request from ${pageContext.errorData.requestURI} is failed
             <br/>

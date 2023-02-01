@@ -15,7 +15,7 @@
     </head>
 
     <body>
-        <c:import url="navibar.jsp"/>
+        <c:import url="navbar.jsp"/>
         <div class="container">
             <form action="/cars/view.do">
                 <div class="form-group">
