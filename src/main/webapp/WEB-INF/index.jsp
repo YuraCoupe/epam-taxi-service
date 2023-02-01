@@ -1,4 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" scope="session" />
+<fmt:setLocale value="${language}" />
+<fmt:setBundle basename="labels" var="label"/>
+<fmt:setBundle basename="messages" var = "message"/>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
@@ -9,16 +15,14 @@
 
     <body>
         <c:import url="navibar.jsp"/>
+
         <div class="container">
             <c:choose>
                 <c:when test = "${isLoggedIn == true}">
-                    Welcome to Taxi Service.<br>
-                    Use navigation bar to proceed.
-
+                    <fmt:message key="message.welcome.loggedIn" bundle = "${message}"/>
                 </c:when>
                 <c:otherwise>
-                    Welcome to Taxi Service.<br>
-                    Please, <a href="/loginPage.do">login</a> to proceed.
+                    <fmt:message key="message.welcome.guest" bundle = "${message}"/><a href="/loginPage.do"> <fmt:message key="label.login" bundle = "${label}"/></a>
                 </c:otherwise>
             </c:choose>
         </div>

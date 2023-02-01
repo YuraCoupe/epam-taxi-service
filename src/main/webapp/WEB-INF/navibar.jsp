@@ -8,6 +8,9 @@
 <nav class="navbar navbar-inverse">
     <div class="container">
         <div class="navbar-header">
+            <a class="navbar-brand" href="/">
+                <img src="${pageContext.request.contextPath}/images/taxi-logo.jpg" width="30" height="30" alt="taxi logo"/>
+            </a>
             <a class="navbar-brand" href="/">Taxi Service</a>
         </div>
         <ul class="nav navbar-nav">
@@ -59,12 +62,12 @@
             <c:choose>
                 <c:when test = "${not empty sessionScope.isLoggedIn}">
                     <li>
-                        <a style="float: right" href="/logout.do">Logout</a>
+                        <a style="float: right" href="/logout.do"><fmt:message key="label.logout"/></a>
                     </li>
                 </c:when>
                 <c:otherwise>
                     <li>
-                        <a style="float: right" href="/loginPage.do">Login</a>
+                        <a style="float: right" href="/loginPage.do"><fmt:message key="label.login"/></a>
                     </li>
                 </c:otherwise>
             </c:choose>
