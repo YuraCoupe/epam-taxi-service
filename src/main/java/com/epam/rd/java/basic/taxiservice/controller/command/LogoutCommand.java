@@ -10,7 +10,9 @@ public class LogoutCommand implements ActionCommand {
     @Override
     public CommandResult execute(HttpServletRequest request) {
         String page = ConfigurationManager.getProperty("path.page.index"); // уничтожение сессии
+        String language = (String) request.getSession().getAttribute("language");
         request.getSession().invalidate();
+        request.getSession().setAttribute("language", language);
         return new ForwardResult(page);
     }
 }

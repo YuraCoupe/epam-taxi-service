@@ -9,6 +9,10 @@
     </welcome-file-list>
 
     <filter-mapping>
+        <filter-name>localeFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
         <filter-name>indexPageForwardFilter</filter-name>
         <url-pattern>/</url-pattern>
     </filter-mapping>
