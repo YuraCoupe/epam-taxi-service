@@ -59,12 +59,15 @@ public class LoginCommand implements ActionCommand {
         PasswordEncoder passwordEncoder = (PasswordEncoder) ctx.getAttribute("passwordEncoder");
         String enctyptedPassword = passwordEncoder.encode(password);
 
+        String language = (String) request.getSession().getAttribute("language");
+        request.getSession().invalidate();
 
         if(passwordEncoder.matches(password, enctyptedPassword)){
             HttpSession session = request.getSession();
             session.setAttribute("isLoggedIn", true);
             session.setAttribute("phoneNumber", phoneNumber);
             session.setAttribute("user", userFromDB);
+            session.setAttribute("language", language);
             page = ConfigurationManager.getProperty("path.uri.trips.list");
             return new RedirectResult(page);
         }else{
