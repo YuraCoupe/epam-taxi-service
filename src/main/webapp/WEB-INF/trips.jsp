@@ -50,6 +50,19 @@
                         <td><fmt:message key="label.user"/></td>
                         <td><fmt:message key="label.trip.departure.address"/></td>
                         <td><fmt:message key="label.trip.destination.address"/></td>
+                        <td>
+                            <a href = "?tripsFieldToSort=open_time&tripsChangeSortOrder=true">
+                                <fmt:message key="label.trip.openTime"/>
+                                <c:choose>
+                                    <c:when test = "${sessionScope.tripsSortOrder == 'DESC'}">
+                                        <i class="fa fa-caret-down"></i>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <i class="fa fa-caret-up"></i>
+                                    </c:otherwise>
+                                </c:choose>
+                            </a>
+                        </td>
                         <td><fmt:message key="label.trip.price"/></td>
                         <td><fmt:message key="label.trip.category"/></td>
                         <td><fmt:message key="label.trip.status"/></td>
@@ -69,6 +82,9 @@
                         </td>
                         <td>
                             <c:out value="${trip.destinationAddress}"/>
+                        </td>
+                        <td>
+                            <c:out value="${trip.openTime}"/>
                         </td>
                         <td>
                             <c:out value="${trip.price}"/>

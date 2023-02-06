@@ -44,6 +44,18 @@ public class ViewTripsListCommand implements ActionCommand {
             }
         }
 
+        String fieldToSort = request.getParameter("fieldToSort");
+        String tripsChangeSortOrder = request.getParameter("tripsChangeSortOrder");
+        String sortOrder = (String) request.getSession().getAttribute("tripsSortOrder");        if (fieldToSort == null) {
+            fieldToSort = (String) request.getSession().getAttribute("tripsFieldToSort");
+        } else {
+            request.getSession().setAttribute("tripsFieldToSort", fieldToSort);
+        }
+        if (tripsChangeSortOrder != null) {
+            sortOrder = sortOrder.equals("DESC") ? "ASC" : "DESC";
+            request.getSession().setAttribute("tripsSortOrder", sortOrder);
+        }
+
         int totalNumber;
         int pageNumber = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
         int limit = 5;
@@ -53,17 +65,17 @@ public class ViewTripsListCommand implements ActionCommand {
         switch (loggedUserRoleTitle) {
             case "ROLE_ADMINISTRATOR": {
                 totalNumber = tripService.getTotalNumber();
-                trips = tripService.findAllWithOffsetAndLimit(offset, limit);
+                trips = tripService.findAllWithOffsetAndLimit(fieldToSort, sortOrder, offset, limit);
                 break;
             }
             case "ROLE_DRIVER": {
                 totalNumber = tripService.getTotalNumberByDriverId(loggedInUser.getId());
-                trips = tripService.findByDriverIdWithOffsetAndLimit(loggedInUser.getId(), offset, limit);
+                trips = tripService.findByDriverIdWithOffsetAndLimit(loggedInUser.getId(), fieldToSort, sortOrder, offset, limit);
                 break;
             }
             default: {
                 totalNumber = tripService.getTotalNumberByUserId(loggedInUser.getId());
-                trips = tripService.findByUserIdWithOffsetAndLimit(loggedInUser.getId(), offset, limit);
+                trips = tripService.findByUserIdWithOffsetAndLimit(loggedInUser.getId(), fieldToSort, sortOrder, offset, limit);
             }
         }
 
