@@ -11,13 +11,18 @@ import com.epam.rd.java.basic.taxiservice.model.Car.CarStatus;
 import com.epam.rd.java.basic.taxiservice.model.Trip;
 import com.epam.rd.java.basic.taxiservice.model.User;
 import com.epam.rd.java.basic.taxiservice.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 public class EditCarCommand implements ActionCommand {
+    final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     @Override
     public CommandResult execute(HttpServletRequest request) throws UnsupportedEncodingException {
         ServletContext ctx = request.getServletContext();

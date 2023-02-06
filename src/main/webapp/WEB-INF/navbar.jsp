@@ -8,9 +8,9 @@
 <nav class="navbar navbar-inverse">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="/">
+            <!-- <a class="navbar-brand" href="/">
                 <img src="${pageContext.request.contextPath}/images/taxi-logo.jpg" width="30" height="30" alt="taxi logo"/>
-            </a>
+            </a>-->
             <a class="navbar-brand" href="/">Taxi Service</a>
         </div>
         <ul class="nav navbar-nav">

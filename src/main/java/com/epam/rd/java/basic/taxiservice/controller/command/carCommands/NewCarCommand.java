@@ -14,13 +14,18 @@ import com.epam.rd.java.basic.taxiservice.service.CarCategoryService;
 import com.epam.rd.java.basic.taxiservice.service.CarModelService;
 import com.epam.rd.java.basic.taxiservice.service.CarStatusService;
 import com.epam.rd.java.basic.taxiservice.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 public class NewCarCommand implements ActionCommand {
+    final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     @Override
     public CommandResult execute(HttpServletRequest request) throws UnsupportedEncodingException {
         ServletContext ctx = request.getServletContext();
@@ -41,6 +46,7 @@ public class NewCarCommand implements ActionCommand {
         request.setAttribute("carStatuses", carStatuses);
         List<User> freeDrivers = userService.findFreeDrivers();
         request.setAttribute("freeDrivers", freeDrivers);
+
         String page = ConfigurationManager.getProperty("path.page.cars.new");
         return new ForwardResult(page);
     }

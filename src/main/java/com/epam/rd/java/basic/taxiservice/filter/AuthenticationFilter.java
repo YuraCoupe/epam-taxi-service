@@ -1,15 +1,20 @@
 package com.epam.rd.java.basic.taxiservice.filter;
 
 import com.epam.rd.java.basic.taxiservice.config.ConfigurationManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 
 @WebFilter(filterName = "authenticationFilter")
 public class AuthenticationFilter implements Filter {
+    final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
@@ -35,6 +40,7 @@ public class AuthenticationFilter implements Filter {
                 || LOGIN_URI.equals(action)
                 || NEW_USER_URI.equals(action)
                 || SAVE_USER_URI.equals(action)) {
+            logger.info("URI: {}", action);
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             Object isLoggedObj = req.getSession().getAttribute("isLoggedIn");

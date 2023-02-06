@@ -13,12 +13,17 @@ import com.epam.rd.java.basic.taxiservice.service.CarService;
 import com.epam.rd.java.basic.taxiservice.service.CarStatusService;
 import com.epam.rd.java.basic.taxiservice.service.TripService;
 import com.epam.rd.java.basic.taxiservice.service.TripStatusService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.invoke.MethodHandles;
 import java.sql.Timestamp;
 
 public class FinishTripCommand implements ActionCommand {
+    final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     @Override
     public CommandResult execute(HttpServletRequest request) {
         ServletContext ctx = request.getServletContext();
@@ -34,11 +39,24 @@ public class FinishTripCommand implements ActionCommand {
         Trip trip = tripService.findById(tripId);
 
         CarStatus carStatus = carStatusService.findByTitle("available for order");
+
         for (Car car : trip.getCars()) {
             if (car.getDriver().getId().equals(userId)) {
                 car.setStatus(carStatus);
                 car.getCurrentTrip().setId(null);
                 carService.update(car);
+                logger.info(
+                        "Driver {} {} {} finished trip {}",
+                        loggedInUser.getPhoneNumber(),
+                        loggedInUser.getFirstName(),
+                        loggedInUser.getLastName(),
+                        trip.getId()
+                );
+                logger.info("Car {} {} {} status changed to {}",
+                        car.getLicensePlate(),
+                        car.getModel().getBrand(),
+                        car.getModel().getModel(),
+                        carStatus.getTitle());
             }
         }
 
@@ -56,6 +74,7 @@ public class FinishTripCommand implements ActionCommand {
             trip.setStatus(status);
             trip.setCloseTime(new Timestamp(System.currentTimeMillis()));
             tripService.update(trip);
+            logger.info("Trip {} finished", trip.getId());
         }
 
         String page = ConfigurationManager.getProperty("path.uri.trips.view") + "?id=" + tripId;

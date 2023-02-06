@@ -9,11 +9,16 @@ import com.epam.rd.java.basic.taxiservice.model.TripStatus;
 import com.epam.rd.java.basic.taxiservice.model.User;
 import com.epam.rd.java.basic.taxiservice.service.TripService;
 import com.epam.rd.java.basic.taxiservice.service.TripStatusService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.invoke.MethodHandles;
 
 public class StartTripCommand implements ActionCommand {
+    final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     @Override
     public CommandResult execute(HttpServletRequest request) {
         ServletContext ctx = request.getServletContext();
@@ -28,6 +33,15 @@ public class StartTripCommand implements ActionCommand {
         TripStatus status = tripStatusService.findByTitle("Processing");
         trip.setStatus(status);
         tripService.update(trip);
+
+        logger.info(
+                "Trip {} started by driver {} {} {}",
+                trip.getId(),
+                loggedInUser.getPhoneNumber(),
+                loggedInUser.getFirstName(),
+                loggedInUser.getLastName()
+        );
+
         String page = ConfigurationManager.getProperty("path.uri.trips.view") + "?id=" + tripId;
         return new RedirectResult(page);
 
