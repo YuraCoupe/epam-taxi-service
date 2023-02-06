@@ -89,7 +89,7 @@
                         <label for="passengersNumber"><fmt:message key="label.trip.passengers.number" var="passengersNumber"/>${passengersNumber}</label><br>
                         <select class="form-control" id="passengersNumber" name="passengersNumber">
                             <option disabled selected value><fmt:message key="label.trip.select.passengers.number"/></option>
-                            <c:forEach var = "i" begin = "3" end = "7">
+                            <c:forEach var = "i" begin = "1" end = "7">
                                 <option value="${i}" ${i == trip.numberOfPassengers ? 'selected="selected"' : ''}>
                                     <c:out value="${i}"/>
                                 </option>

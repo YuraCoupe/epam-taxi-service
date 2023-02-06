@@ -12,9 +12,12 @@ import com.epam.rd.java.basic.taxiservice.model.Car.CarCategory;
 import com.epam.rd.java.basic.taxiservice.model.Car.CarStatus;
 import com.epam.rd.java.basic.taxiservice.service.*;
 import com.epam.rd.java.basic.taxiservice.validator.TripValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -22,6 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 
 public class SaveTripCommand implements ActionCommand {
+    final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     @Override
     public CommandResult execute(HttpServletRequest request) {
         ServletContext ctx = request.getServletContext();
@@ -99,10 +104,20 @@ public class SaveTripCommand implements ActionCommand {
 
         Integer tripId = tripService.save(trip);
 
+        logger.info("New trip {} was created", trip.getId());
+
         CarStatus carStatus = carStatusService.findByTitle("on route");
-        cars.forEach(car -> car.setStatus(carStatus));
-        cars.forEach(car -> car.setCurrentTrip(trip));
-        cars.forEach(carService::update);
+        cars.forEach(car -> {
+            car.setStatus(carStatus);
+            car.setCurrentTrip(trip);
+            carService.update(car);
+            logger.info(
+                    "Car {} changed status to {} and assigned to trip {}",
+                    car.getLicensePlate(),
+                    carStatus.getTitle(),
+                    trip.getId()
+            );
+        });
 
         request.getSession().setAttribute("activeTripId", tripId);
 

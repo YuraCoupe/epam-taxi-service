@@ -9,11 +9,16 @@ import com.epam.rd.java.basic.taxiservice.model.TripStatus;
 import com.epam.rd.java.basic.taxiservice.model.User;
 import com.epam.rd.java.basic.taxiservice.service.TripService;
 import com.epam.rd.java.basic.taxiservice.service.TripStatusService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.invoke.MethodHandles;
 
 public class DeleteTripCommand implements ActionCommand {
+    final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     @Override
     public CommandResult execute(HttpServletRequest request) {
         ServletContext ctx = request.getServletContext();
@@ -21,6 +26,9 @@ public class DeleteTripCommand implements ActionCommand {
         Integer deleteId = Integer.parseInt(request.getParameter("id"));
         Trip trip = tripService.findById(deleteId);
         tripService.delete(trip);
+
+        logger.info("Trip {} was deleted", trip.getId());
+
         String page = ConfigurationManager.getProperty("path.page.trips.list");
         return new RedirectResult(page);
 

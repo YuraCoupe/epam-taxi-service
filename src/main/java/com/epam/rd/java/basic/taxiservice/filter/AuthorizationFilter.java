@@ -112,7 +112,7 @@ public class AuthorizationFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
 
-        String action = req.getRequestURI();
+        String action = req.getServletPath();
         if (HOME_PATH.equals(action)
                 || INDEX_PATH.equals(action)
                 || LOGIN_PATH.equals(action)

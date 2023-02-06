@@ -14,11 +14,16 @@ import com.epam.rd.java.basic.taxiservice.model.Trip;
 import com.epam.rd.java.basic.taxiservice.model.User;
 import com.epam.rd.java.basic.taxiservice.service.*;
 import com.epam.rd.java.basic.taxiservice.validator.CarValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.invoke.MethodHandles;
 
 public class UpdateCarCommand implements ActionCommand {
+    final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     @Override
     public CommandResult execute(HttpServletRequest request) {
         ServletContext ctx = request.getServletContext();
@@ -73,6 +78,8 @@ public class UpdateCarCommand implements ActionCommand {
         }
 
         carService.update(car);
+
+        logger.info("Car {} {} {} was updated", car.getLicensePlate(), car.getModel().getBrand(), car.getModel().getModel());
 
         String page = ConfigurationManager.getProperty("path.uri.cars.view") + "?id=" + carId;
         return new RedirectResult(page);

@@ -22,7 +22,7 @@
                     <label for="id"><fmt:message key="label.trip"/></label><br>
                     <select class="form-control" id="id" name="id">
                         <option disabled selected value><fmt:message key="label.select.trip"/></option>
-                        <c:forEach items="${trips}" var="car">
+                        <c:forEach items="${trips}" var="trip">
                             <option value="${trip.id}">
                                 <c:out value="${trip.id}"/>
                             </option>

@@ -10,12 +10,17 @@ import com.epam.rd.java.basic.taxiservice.model.Role;
 import com.epam.rd.java.basic.taxiservice.model.User;
 import com.epam.rd.java.basic.taxiservice.service.*;
 import com.epam.rd.java.basic.taxiservice.validator.UserValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.invoke.MethodHandles;
 
 public class UpdateClientCommand implements ActionCommand {
+    final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     @Override
     public CommandResult execute(HttpServletRequest request) {
         ServletContext ctx = request.getServletContext();
@@ -31,7 +36,7 @@ public class UpdateClientCommand implements ActionCommand {
             return new ForwardResult(page);
         }
 
-        Integer userId;
+        int userId;
         User user = new User();
 
         userId = Integer.parseInt(request.getParameter("userId"));
@@ -62,6 +67,8 @@ public class UpdateClientCommand implements ActionCommand {
         }
 
         userService.update(user);
+
+        logger.info("Person {} {} {} was updated", user.getPhoneNumber(), user.getFirstName(), user.getLastName());
 
         String page = ConfigurationManager.getProperty("path.uri.clients.view") + "?id=" + userId;
         return new RedirectResult(page);

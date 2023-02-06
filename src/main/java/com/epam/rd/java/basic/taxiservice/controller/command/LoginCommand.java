@@ -9,14 +9,19 @@ import com.epam.rd.java.basic.taxiservice.model.ErrorMessage;
 import com.epam.rd.java.basic.taxiservice.model.User;
 import com.epam.rd.java.basic.taxiservice.service.UserService;
 import com.epam.rd.java.basic.taxiservice.validator.UserValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 public class LoginCommand implements ActionCommand {
+    final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private static final String PARAM_NAME_PHONE_NUMBER = "phoneNumber";
     private static final String PARAM_NAME_PASSWORD = "password";
 
@@ -25,14 +30,6 @@ public class LoginCommand implements ActionCommand {
         String page;
         String phoneNumber = request.getParameter(PARAM_NAME_PHONE_NUMBER);
         String password = request.getParameter(PARAM_NAME_PASSWORD);
-//        if (LoginLogic.checkLogin(login, pass)) {
-//            request.setAttribute("user", login);
-//            page = ConfigurationManager.getProperty("path.page.main");
-//        } else {
-//            request.setAttribute("errorLoginPassMessage", MessageManager.getProperty("message.loginerror"));
-//            page = ConfigurationManager.getProperty("path.page.login");
-//        }
-//        return page;
 
         ServletContext ctx = request.getServletContext();
 
@@ -69,11 +66,22 @@ public class LoginCommand implements ActionCommand {
             session.setAttribute("user", userFromDB);
             session.setAttribute("language", language);
             page = ConfigurationManager.getProperty("path.uri.trips.list");
+            logger.info("User {} {} {} with role {} logged in from IP address {}",
+                    userFromDB.getPhoneNumber(),
+                    userFromDB.getFirstName(),
+                    userFromDB.getLastName(),
+                    userFromDB.getRole().getTitle(),
+                    request.getRemoteAddr());
             return new RedirectResult(page);
         }else{
             errorMessage.setErrors(List.of("Wrong phone number or password. Please, try again"));
             request.setAttribute("errorMessage", errorMessage);
             page = ConfigurationManager.getProperty("path.page.login");
+            logger.info("User {} {} {} with role {} entered wrong password",
+                    userFromDB.getPhoneNumber(),
+                    userFromDB.getFirstName(),
+                    userFromDB.getLastName(),
+                    userFromDB.getRole().getTitle());
             return new ForwardResult(page);
         }
     }
