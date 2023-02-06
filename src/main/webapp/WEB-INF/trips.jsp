@@ -63,7 +63,19 @@
                                 </c:choose>
                             </a>
                         </td>
-                        <td><fmt:message key="label.trip.price"/></td>
+                        <td>
+                            <a href = "?tripsFieldToSort=price&tripsChangeSortOrder=true">
+                                <fmt:message key="label.trip.price"/>
+                                <c:choose>
+                                    <c:when test = "${sessionScope.tripsSortOrder == 'DESC'}">
+                                        <i class="fa fa-caret-down"></i>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <i class="fa fa-caret-up"></i>
+                                    </c:otherwise>
+                                </c:choose>
+                            </a>
+                        </td>
                         <td><fmt:message key="label.trip.category"/></td>
                         <td><fmt:message key="label.trip.status"/></td>
                         <td><fmt:message key="label.trip.distance"/></td>

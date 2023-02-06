@@ -44,9 +44,10 @@ public class ViewTripsListCommand implements ActionCommand {
             }
         }
 
-        String fieldToSort = request.getParameter("fieldToSort");
+        String fieldToSort = request.getParameter("tripsFieldToSort");
         String tripsChangeSortOrder = request.getParameter("tripsChangeSortOrder");
-        String sortOrder = (String) request.getSession().getAttribute("tripsSortOrder");        if (fieldToSort == null) {
+        String sortOrder = (String) request.getSession().getAttribute("tripsSortOrder");
+        if (fieldToSort == null) {
             fieldToSort = (String) request.getSession().getAttribute("tripsFieldToSort");
         } else {
             request.getSession().setAttribute("tripsFieldToSort", fieldToSort);
