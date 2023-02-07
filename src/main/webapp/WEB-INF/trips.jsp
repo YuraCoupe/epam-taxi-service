@@ -92,8 +92,32 @@
                             </a>
                         </td>
                         <td><fmt:message key="label.trip.category"/></td>
-                        <td><fmt:message key="label.trip.status"/></td>
-                        <td><fmt:message key="label.trip.distance"/></td>
+                        <td>
+                            <a href = "?tripsFieldToSort=status&tripsChangeSortOrder=true">
+                                <fmt:message key="label.trip.status"/>
+                                <c:choose>
+                                    <c:when test = "${sessionScope.tripsSortOrder == 'DESC'}">
+                                        <i class="fa fa-caret-down"></i>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <i class="fa fa-caret-up"></i>
+                                    </c:otherwise>
+                                </c:choose>
+                            </a>
+                        </td>
+                        <td>
+                            <a href = "?tripsFieldToSort=distance&tripsChangeSortOrder=true">
+                                <fmt:message key="label.trip.distance"/>
+                                <c:choose>
+                                    <c:when test = "${sessionScope.tripsSortOrder == 'DESC'}">
+                                        <i class="fa fa-caret-down"></i>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <i class="fa fa-caret-up"></i>
+                                    </c:otherwise>
+                                </c:choose>
+                            </a>
+                        </td>
                     </tr>
                 </thead>
                 <tbody>
@@ -129,8 +153,10 @@
                             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                                 <div class="btn-group me-2" role="group" aria-label="Second group">
                                      <a href="/trips/view.do?id=${trip.id}" type="button" class="btn btn-info"><fmt:message key="label.view"/></a>
-                                     <a href="/trips/edit.do?id=${trip.id}" type="button" class="btn btn-warning"><fmt:message key="label.edit"/></a>
-                                     <a href="/trips/delete.do?id=${trip.id}" type="button" class="btn btn-danger"><fmt:message key="label.remove"/></a>
+                                     <c:if test = "${user.role.title='ROLE_ADMINISTRATOR'}">
+                                        <a href="/trips/edit.do?id=${trip.id}" type="button" class="btn btn-warning"><fmt:message key="label.edit"/></a>
+                                        <a href="/trips/delete.do?id=${trip.id}" type="button" class="btn btn-danger"><fmt:message key="label.remove"/></a>
+                                     </c:if>
                                 </div>
                             </div>
                         </td>
