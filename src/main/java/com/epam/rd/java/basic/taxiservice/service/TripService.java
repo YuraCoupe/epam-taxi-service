@@ -9,6 +9,7 @@ import com.epam.rd.java.basic.taxiservice.model.Trip;
 import com.epam.rd.java.basic.taxiservice.repository.CarRepository;
 import com.epam.rd.java.basic.taxiservice.repository.TripRepository;
 
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -45,8 +46,8 @@ public class TripService {
         return trips;
     }
 
-    public List<Trip> findAllWithOffsetAndLimit(String fieldToSort, String sortOrder, int offset, int limit) {
-        List<Trip> trips = tripRepository.findAllWithOffsetAndLimit(fieldToSort, sortOrder, offset, limit);
+    public List<Trip> findAllWithOffsetAndLimit(String fieldToSort, String sortOrder, Timestamp timeFrom, Timestamp timeTo, int offset, int limit) {
+        List<Trip> trips = tripRepository.findAllWithOffsetAndLimit(fieldToSort, sortOrder, timeFrom, timeTo, offset, limit);
         trips.forEach(x -> x.setCars(new HashSet<>(findCarsByTripId(x.getId()))));
         return trips;
     }
@@ -66,8 +67,10 @@ public class TripService {
         return tripRepository.findActiveTripByDriverId(driverId);
     }
 
-    public List<Trip> findByUserIdWithOffsetAndLimit(Integer userId, String fieldToSort, String sortOrder, int offset, int limit) {
-        List<Trip> trips = tripRepository.findByUserIdWithOffsetAndLimit(userId, fieldToSort, sortOrder, offset, limit);
+    public List<Trip> findByUserIdWithOffsetAndLimit(Integer userId, String fieldToSort, String sortOrder,
+                                                     Timestamp timeFrom, Timestamp timeTo, int offset, int limit) {
+        List<Trip> trips = tripRepository.
+                findByUserIdWithOffsetAndLimit(userId, fieldToSort, sortOrder, timeFrom, timeTo, offset, limit);
         trips.forEach(x -> x.setCars(new HashSet<>(findCarsByTripId(x.getId()))));
         return trips;
     }
@@ -82,12 +85,12 @@ public class TripService {
         return carRepository.findByTripId(tripId);
     }
 
-    public int getTotalNumber() {
-        return tripRepository.findTotalNumber();
+    public int getTotalNumber(Timestamp timeFrom, Timestamp timeTo) {
+        return tripRepository.findTotalNumber(timeFrom, timeTo);
     }
 
-    public int getTotalNumberByUserId(Integer userId) {
-        return tripRepository.findTotalNumberByUser(userId);
+    public int getTotalNumberByUserId(Integer userId, Timestamp timeFrom, Timestamp timeTo) {
+        return tripRepository.findTotalNumberByUser(userId, timeFrom, timeTo);
     }
 
     public int getTotalNumberByDriverId(Integer driverId) {

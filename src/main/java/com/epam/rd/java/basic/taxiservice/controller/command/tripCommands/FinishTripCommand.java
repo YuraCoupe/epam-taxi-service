@@ -72,7 +72,7 @@ public class FinishTripCommand implements ActionCommand {
         if (tripIsCompleted) {
             TripStatus status = tripStatusService.findByTitle("Completed");
             trip.setStatus(status);
-            trip.setCloseTime(new Timestamp(System.currentTimeMillis()));
+            trip.setCloseTime(new Timestamp(System.currentTimeMillis() / 60000L * 60000L));
             tripService.update(trip);
             logger.info("Trip {} finished", trip.getId());
         }
