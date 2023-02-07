@@ -9,6 +9,7 @@ import com.epam.rd.java.basic.taxiservice.model.Trip;
 import com.epam.rd.java.basic.taxiservice.repository.CarRepository;
 import com.epam.rd.java.basic.taxiservice.repository.TripRepository;
 
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +29,7 @@ public class TripService {
     }
 
     public void delete(Trip trip) {
-        if (!tripRepository.findById(trip.getId()).isEmpty()) {
+        if (tripRepository.findById(trip.getId()).isPresent()) {
             tripRepository.delete(trip);
         } else {
             throw new TripNotFoundException("This trip doesn't exist");
@@ -36,18 +37,18 @@ public class TripService {
     }
 
     public void update(Trip trip) {
-            tripRepository.update(trip);
+        tripRepository.update(trip);
     }
 
     public List<Trip> findAll() {
         List<Trip> trips = tripRepository.findAll();
-        trips.forEach(x -> x.setCars(findCarsByTripId(x.getId()).stream().collect(Collectors.toSet())));
+        trips.forEach(x -> x.setCars(new HashSet<>(findCarsByTripId(x.getId()))));
         return trips;
     }
 
-    public List<Trip> findAllWithOffsetAndLimit(int offset, int limit) {
-        List<Trip> trips = tripRepository.findAllWithOffsetAndLimit(offset, limit);
-        trips.forEach(x -> x.setCars(findCarsByTripId(x.getId()).stream().collect(Collectors.toSet())));
+    public List<Trip> findAllWithOffsetAndLimit(String fieldToSort, String sortOrder, Timestamp timeFrom, Timestamp timeTo, int offset, int limit) {
+        List<Trip> trips = tripRepository.findAllWithOffsetAndLimit(fieldToSort, sortOrder, timeFrom, timeTo, offset, limit);
+        trips.forEach(x -> x.setCars(new HashSet<>(findCarsByTripId(x.getId()))));
         return trips;
     }
 
@@ -66,15 +67,17 @@ public class TripService {
         return tripRepository.findActiveTripByDriverId(driverId);
     }
 
-    public List<Trip> findByUserIdWithOffsetAndLimit(Integer userId, int offset, int limit) {
-        List<Trip> trips = tripRepository.findByUserIdWithOffsetAndLimit(userId, offset, limit);
-        trips.forEach(x -> x.setCars(findCarsByTripId(x.getId()).stream().collect(Collectors.toSet())));
+    public List<Trip> findByUserIdWithOffsetAndLimit(Integer userId, String fieldToSort, String sortOrder,
+                                                     Timestamp timeFrom, Timestamp timeTo, int offset, int limit) {
+        List<Trip> trips = tripRepository.
+                findByUserIdWithOffsetAndLimit(userId, fieldToSort, sortOrder, timeFrom, timeTo, offset, limit);
+        trips.forEach(x -> x.setCars(new HashSet<>(findCarsByTripId(x.getId()))));
         return trips;
     }
 
-    public List<Trip> findByDriverIdWithOffsetAndLimit(Integer driverId, int offset, int limit) {
-        List<Trip> trips = tripRepository.findByDriverIdWithOffsetAndLimit(driverId, offset, limit);
-        trips.forEach(x -> x.setCars(findCarsByTripId(x.getId()).stream().collect(Collectors.toSet())));
+    public List<Trip> findByDriverIdWithOffsetAndLimit(Integer driverId, String fieldToSort, String sortOrder, int offset, int limit) {
+        List<Trip> trips = tripRepository.findByDriverIdWithOffsetAndLimit(driverId, fieldToSort, sortOrder, offset, limit);
+        trips.forEach(x -> x.setCars(new HashSet<>(findCarsByTripId(x.getId()))));
         return trips;
     }
 
@@ -82,12 +85,12 @@ public class TripService {
         return carRepository.findByTripId(tripId);
     }
 
-    public int getTotalNumber() {
-        return tripRepository.findTotalNumber();
+    public int getTotalNumber(Timestamp timeFrom, Timestamp timeTo) {
+        return tripRepository.findTotalNumber(timeFrom, timeTo);
     }
 
-    public int getTotalNumberByUserId(Integer userId) {
-        return tripRepository.findTotalNumberByUser(userId);
+    public int getTotalNumberByUserId(Integer userId, Timestamp timeFrom, Timestamp timeTo) {
+        return tripRepository.findTotalNumberByUser(userId, timeFrom, timeTo);
     }
 
     public int getTotalNumberByDriverId(Integer driverId) {

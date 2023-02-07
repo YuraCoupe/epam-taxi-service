@@ -49,15 +49,17 @@ public class TripRepository {
                     "JOIN person p ON p.id = t.person_id\n" +
                     "JOIN car_category c ON c.id = category_id\n" +
                     "JOIN trip_status s ON s.id = status_id\n" +
-                    "ORDER BY open_time DESC\n" +
+                    "WHERE open_time > ? AND open_time < ?\n" +
+                    "ORDER BY %s %s\n" +
                     "OFFSET ? LIMIT ?;";
     private static final String GET_TOTAL_NUMBER =
             "SELECT COUNT (*) as number\n" +
-                    "FROM trip;";
+                    "FROM trip\n" +
+                    "WHERE open_time > ? AND open_time < ?;";
     private static final String GET_TOTAL_NUMBER_BY_USER =
             "SELECT COUNT (*) as number\n" +
                     "FROM trip\n" +
-                    "WHERE person_id = ?;";
+                    "WHERE person_id = ? AND open_time > ? AND open_time < ?;";
     private static final String GET_TOTAL_NUMBER_BY_DRIVER =
             "SELECT COUNT (*) as number\n" +
                     "FROM trip t\n" +
@@ -86,8 +88,8 @@ public class TripRepository {
                     "JOIN person p ON p.id = t.person_id\n" +
                     "JOIN car_category c ON c.id = category_id\n" +
                     "JOIN trip_status s ON s.id = status_id\n" +
-                    "WHERE t.person_id = ?\n" +
-                    "ORDER BY open_time DESC\n" +
+                    "WHERE t.person_id = ? AND open_time > ? AND open_time < ?\n" +
+                    "ORDER BY %s %s\n" +
                     "OFFSET ? LIMIT ?;";
     private static final String FIND_BY_DRIVER_ID_WITH_OFFSET_AND_LIMIT =
             "SELECT t.id, t.person_id, p.phone_number AS phone_number, p.first_name AS first_name,\n" +
@@ -101,7 +103,7 @@ public class TripRepository {
                     "JOIN trip_car tc ON tc.trip_id = t.id\n" +
                     "JOIN car ON car.id = tc.car_id\n" +
                     "WHERE car.driver_id = ?\n" +
-                    "ORDER BY open_time DESC\n" +
+                    "ORDER BY %s %s\n" +
                     "OFFSET ? LIMIT ?;";
 
     private static final String INSERT_TRIP_CAR =
@@ -212,11 +214,15 @@ public class TripRepository {
         return new ArrayList<>();
     }
 
-    public List<Trip> findAllWithOffsetAndLimit(int offset, int limit) {
+    public List<Trip> findAllWithOffsetAndLimit(String fieldToSort, String sortOrder,
+                                                Timestamp timeFrom, Timestamp timeTo, int offset, int limit) {
         try (Connection connection = databaseManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_WITH_OFFSET_AND_LIMIT)) {
-            preparedStatement.setInt(1, offset);
-            preparedStatement.setInt(2, limit);
+             PreparedStatement preparedStatement = connection.
+                     prepareStatement(String.format(FIND_ALL_WITH_OFFSET_AND_LIMIT, fieldToSort, sortOrder))) {
+            preparedStatement.setTimestamp(1, timeFrom);
+            preparedStatement.setTimestamp(2, timeTo);
+            preparedStatement.setInt(3, offset);
+            preparedStatement.setInt(4, limit);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             return mapToMany(resultSet);
@@ -238,12 +244,16 @@ public class TripRepository {
         return Optional.empty();
     }
 
-    public List<Trip> findByUserIdWithOffsetAndLimit(Integer userId, int offset, int limit) {
+    public List<Trip> findByUserIdWithOffsetAndLimit(Integer userId, String fieldToSort, String sortOrder,
+                                                     Timestamp timeFrom, Timestamp timeTo, int offset, int limit) {
         try (Connection connection = databaseManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_USER_ID_WITH_OFFSET_AND_LIMIT)) {
+             PreparedStatement preparedStatement = connection.
+                     prepareStatement(String.format(FIND_BY_USER_ID_WITH_OFFSET_AND_LIMIT, fieldToSort, sortOrder))) {
             preparedStatement.setInt(1, userId);
-            preparedStatement.setInt(2, offset);
-            preparedStatement.setInt(3, limit);
+            preparedStatement.setTimestamp(2, timeFrom);
+            preparedStatement.setTimestamp(3, timeTo);
+            preparedStatement.setInt(4, offset);
+            preparedStatement.setInt(5, limit);
             ResultSet resultSet = preparedStatement.executeQuery();
             return mapToMany(resultSet);
         } catch (SQLException throwables) {
@@ -252,9 +262,10 @@ public class TripRepository {
         return new ArrayList<>();
     }
 
-    public List<Trip> findByDriverIdWithOffsetAndLimit(Integer driverId, int offset, int limit) {
+    public List<Trip> findByDriverIdWithOffsetAndLimit(Integer driverId, String fieldToSort, String sortOrder, int offset, int limit) {
         try (Connection connection = databaseManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_DRIVER_ID_WITH_OFFSET_AND_LIMIT)) {
+             PreparedStatement preparedStatement = connection.
+                     prepareStatement(String.format(FIND_BY_DRIVER_ID_WITH_OFFSET_AND_LIMIT, fieldToSort, sortOrder))) {
             preparedStatement.setInt(1, driverId);
             preparedStatement.setInt(2, offset);
             preparedStatement.setInt(3, limit);
@@ -266,10 +277,12 @@ public class TripRepository {
         return new ArrayList<>();
     }
 
-    public int findTotalNumber() {
+    public int findTotalNumber(Timestamp timeFrom, Timestamp timeTo) {
         int number = 0;
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_TOTAL_NUMBER)) {
+            preparedStatement.setTimestamp(1, timeFrom);
+            preparedStatement.setTimestamp(2, timeTo);
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             number = resultSet.getInt("number");
@@ -280,11 +293,13 @@ public class TripRepository {
         return number;
     }
 
-    public int findTotalNumberByUser(Integer userId) {
+    public int findTotalNumberByUser(Integer userId, Timestamp timeFrom, Timestamp timeTo) {
         int number = 0;
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_TOTAL_NUMBER_BY_USER)) {
             preparedStatement.setInt(1, userId);
+            preparedStatement.setTimestamp(2, timeFrom);
+            preparedStatement.setTimestamp(3, timeTo);
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             number = resultSet.getInt("number");

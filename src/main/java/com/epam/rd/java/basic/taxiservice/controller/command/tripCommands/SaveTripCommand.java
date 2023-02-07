@@ -98,7 +98,7 @@ public class SaveTripCommand implements ActionCommand {
         trip.setCars(new HashSet<>(cars));
         BigDecimal price = priceService.calculateTripPrice(trip.getDistance(), user.getSumSpent(), category, trip.getCars().size());
         trip.setPrice(price);
-        trip.setOpenTime(new Timestamp(System.currentTimeMillis()));
+        trip.setOpenTime(new Timestamp(System.currentTimeMillis() / 60000L * 60000L));
 
         request.setAttribute("trip", trip);
 

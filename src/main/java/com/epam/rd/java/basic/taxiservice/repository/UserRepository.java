@@ -35,6 +35,12 @@ public class UserRepository implements BaseRepository {
                     "FROM person\n" +
                     "JOIN role r ON r.id = person.role_id\n" +
                     "ORDER BY phone_number;";
+    private static final String FIND_ALL_CLIENTS =
+            "SELECT person.id AS id, phone_number, first_name, last_name, password, r.id AS role_id, r.title AS role_title\n" +
+                    "FROM person\n" +
+                    "JOIN role r ON r.id = person.role_id\n" +
+                    "WHERE r.title = 'ROLE_CLIENT'\n" +
+                    "ORDER BY phone_number;";
     private static final String FIND_ALL_WITH_OFFSET_AND_LIMIT =
             "SELECT person.id AS id, phone_number, first_name, last_name, password, r.id AS role_id, r.title AS role_title\n" +
                     "FROM person\n" +
@@ -102,8 +108,7 @@ public class UserRepository implements BaseRepository {
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();
-            Integer id = resultSet.getInt(1);
-            return id;
+            return resultSet.getInt(1);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -195,6 +200,17 @@ public class UserRepository implements BaseRepository {
         return new ArrayList<>();
     }
 
+    public List<User> findAllClients() {
+        try (Connection connection = databaseManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_CLIENTS)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return mapToMany(resultSet);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
     public int findTotalNumber() {
         int number = 0;
         try (Connection connection = databaseManager.getConnection();
@@ -263,7 +279,7 @@ public class UserRepository implements BaseRepository {
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_DISCOUNT_RATE_BY_MONEY_SPENT)) {
             preparedStatement.setBigDecimal(1, moneySpent);
             ResultSet resultSet = preparedStatement.executeQuery();
-            Integer discountRate = 0;
+            int discountRate = 0;
             while (resultSet.next()) {
                 discountRate = resultSet.getInt("discount");
             }

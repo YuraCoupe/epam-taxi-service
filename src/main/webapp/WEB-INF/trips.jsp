@@ -17,20 +17,7 @@
     <body>
         <c:import url="navbar.jsp"/>
         <div class="container">
-            <form action="/trips">
-                <div class="form-group">
-                    <label for="id"><fmt:message key="label.trip"/></label><br>
-                    <select class="form-control" id="id" name="id">
-                        <option disabled selected value><fmt:message key="label.select.trip"/></option>
-                        <c:forEach items="${trips}" var="trip">
-                            <option value="${trip.id}">
-                                <c:out value="${trip.id}"/>
-                            </option>
-                        </c:forEach>
-                    </select>
-                </div>
-                    <input type="submit" value="Search">
-            </form><br>
+            <c:if test = "${user.role.title != 'ROLE_ADMINISTRATOR'}">
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group me-2" role="group" aria-label="Second group">
                         <c:choose>
@@ -43,17 +30,94 @@
                         </c:choose>
                     </div>
                 </div>
-
+            </c:if>
+            <hr>
+            <form action="" class="form-inline" method="POST">
+                <c:if test = "${user.role.title=='ROLE_ADMINISTRATOR'}">
+                    <div class="form-group">
+                        <label for="user"><fmt:message key="label.user"/></label>
+                            <select class="form-control" id="selectedUserId" name="selectedUserId">
+                                <option selected value="0"><fmt:message key="label.select.user"/></option>
+                                <c:forEach items="${users}" var="user">
+                                <option value="${user.id}" ${user.id == selectedUserId ? 'selected="selected"' : ''}>
+                                    <c:out value="${user.phoneNumber}"/>
+                                    <c:out value="${user.firstName}"/>
+                                    <c:out value="${user.lastName}"/>
+                                </option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </c:if>
+                <div class="form-group">
+                    <label for="timeFrom"><fmt:message key="label.trips.select.time.from"/></label>
+                    <input type="datetime-local" class="form-control" id="startTime" name="timeFrom" value="${timeFrom}">
+                </div>
+                <div class="form-group">
+                    <label for="timeTo"><fmt:message key="label.trips.select.time.to"/></label>
+                    <input type="datetime-local" class="form-control" id="endTime" name="timeTo" value="${timeTo}">
+                </div>
+                <button type="submit" class="btn btn-default"><fmt:message key="label.select"/></button>
+            </form>
+            <hr>
             <table class="table table-hover">
                 <thead>
                     <tr>
                         <td><fmt:message key="label.user"/></td>
                         <td><fmt:message key="label.trip.departure.address"/></td>
                         <td><fmt:message key="label.trip.destination.address"/></td>
-                        <td><fmt:message key="label.trip.price"/></td>
+                        <td>
+                            <a href = "?tripsFieldToSort=open_time&tripsChangeSortOrder=true">
+                                <fmt:message key="label.trip.openTime"/>
+                                <c:choose>
+                                    <c:when test = "${sessionScope.tripsSortOrder == 'DESC'}">
+                                        <i class="fa fa-caret-down"></i>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <i class="fa fa-caret-up"></i>
+                                    </c:otherwise>
+                                </c:choose>
+                            </a>
+                        </td>
+                        <td>
+                            <a href = "?tripsFieldToSort=price&tripsChangeSortOrder=true">
+                                <fmt:message key="label.trip.price"/>
+                                <c:choose>
+                                    <c:when test = "${sessionScope.tripsSortOrder == 'DESC'}">
+                                        <i class="fa fa-caret-down"></i>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <i class="fa fa-caret-up"></i>
+                                    </c:otherwise>
+                                </c:choose>
+                            </a>
+                        </td>
                         <td><fmt:message key="label.trip.category"/></td>
-                        <td><fmt:message key="label.trip.status"/></td>
-                        <td><fmt:message key="label.trip.distance"/></td>
+                        <td>
+                            <a href = "?tripsFieldToSort=status&tripsChangeSortOrder=true">
+                                <fmt:message key="label.trip.status"/>
+                                <c:choose>
+                                    <c:when test = "${sessionScope.tripsSortOrder == 'DESC'}">
+                                        <i class="fa fa-caret-down"></i>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <i class="fa fa-caret-up"></i>
+                                    </c:otherwise>
+                                </c:choose>
+                            </a>
+                        </td>
+                        <td>
+                            <a href = "?tripsFieldToSort=distance&tripsChangeSortOrder=true">
+                                <fmt:message key="label.trip.distance"/>
+                                <c:choose>
+                                    <c:when test = "${sessionScope.tripsSortOrder == 'DESC'}">
+                                        <i class="fa fa-caret-down"></i>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <i class="fa fa-caret-up"></i>
+                                    </c:otherwise>
+                                </c:choose>
+                            </a>
+                        </td>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,6 +135,9 @@
                             <c:out value="${trip.destinationAddress}"/>
                         </td>
                         <td>
+                            <c:out value="${trip.openTime}"/>
+                        </td>
+                        <td>
                             <c:out value="${trip.price}"/>
                         </td>
                         <td>
@@ -86,8 +153,10 @@
                             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                                 <div class="btn-group me-2" role="group" aria-label="Second group">
                                      <a href="/trips/view.do?id=${trip.id}" type="button" class="btn btn-info"><fmt:message key="label.view"/></a>
-                                     <a href="/trips/edit.do?id=${trip.id}" type="button" class="btn btn-warning"><fmt:message key="label.edit"/></a>
-                                     <a href="/trips/delete.do?id=${trip.id}" type="button" class="btn btn-danger"><fmt:message key="label.remove"/></a>
+                                     <c:if test = "${user.role.title='ROLE_ADMINISTRATOR'}">
+                                        <a href="/trips/edit.do?id=${trip.id}" type="button" class="btn btn-warning"><fmt:message key="label.edit"/></a>
+                                        <a href="/trips/delete.do?id=${trip.id}" type="button" class="btn btn-danger"><fmt:message key="label.remove"/></a>
+                                     </c:if>
                                 </div>
                             </div>
                         </td>

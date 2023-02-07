@@ -20,7 +20,7 @@ public class UserService {
     }
 
     public Integer save(User user) {
-        Integer id = null;
+        Integer id;
         if (userRepository.findByPhoneNumber(user.getPhoneNumber()).isEmpty()) {
             id = userRepository.save(user);
         } else {
@@ -30,7 +30,7 @@ public class UserService {
     }
 
     public void delete(User user) {
-        if (!userRepository.findById(user.getId()).isEmpty()) {
+        if (userRepository.findById(user.getId()).isPresent()) {
             userRepository.delete(user);
         } else {
             throw new UserNotFoundException("This User doesn't exist");
@@ -60,6 +60,10 @@ public class UserService {
 
     public List<User> findFreeDrivers() {
         return userRepository.findFreeDrivers();
+    }
+
+    public List<User> findAllClients() {
+        return userRepository.findAllClients();
     }
 
 }
