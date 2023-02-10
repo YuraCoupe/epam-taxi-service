@@ -57,9 +57,10 @@ CREATE TABLE car (
     capacity integer NOT NULL,
     category_id integer REFERENCES car_category(id) NOT NULL,
     status_id integer REFERENCES car_status(id) NOT NULL,
-    license_plate varchar(20) UNIQUE
-    driver_id integer REFERENCES user(id)
-    current_trip_id integer REFERENCES trip(id)
+    license_plate varchar(20) UNIQUE,
+    driver_id integer REFERENCES user(id),
+    current_trip_id integer REFERENCES trip(id),
+    current_location varchar(200) NOT NULL
 );
 
 CREATE TABLE street_type (

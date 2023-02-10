@@ -153,7 +153,7 @@
                             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                                 <div class="btn-group me-2" role="group" aria-label="Second group">
                                      <a href="/trips/view.do?id=${trip.id}" type="button" class="btn btn-info"><fmt:message key="label.view"/></a>
-                                     <c:if test = "${user.role.title='ROLE_ADMINISTRATOR'}">
+                                     <c:if test = "${user.role.title=='ROLE_ADMINISTRATOR'}">
                                         <a href="/trips/edit.do?id=${trip.id}" type="button" class="btn btn-warning"><fmt:message key="label.edit"/></a>
                                         <a href="/trips/delete.do?id=${trip.id}" type="button" class="btn btn-danger"><fmt:message key="label.remove"/></a>
                                      </c:if>

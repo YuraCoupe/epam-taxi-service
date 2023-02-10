@@ -31,6 +31,7 @@ public class AuthorizationFilter implements Filter {
     private static final String TRIP_EDIT_PATH = ConfigurationManager.getProperty("path.uri.trips.edit");
     private static final String TRIP_START_PATH = ConfigurationManager.getProperty("path.uri.trips.start");
     private static final String TRIP_FINISH_PATH = ConfigurationManager.getProperty("path.uri.trips.finish");
+    private static final String TRIP_DELETE_PATH = ConfigurationManager.getProperty("path.uri.trips.delete");
 
 
     private static final String CAR_NEW_PATH = ConfigurationManager.getProperty("path.uri.cars.new");
@@ -85,6 +86,7 @@ public class AuthorizationFilter implements Filter {
                 TRIP_LIST_PATH,
                 TRIP_EDIT_PATH,
                 TRIP_UPDATE_PATH,
+                TRIP_DELETE_PATH,
                 CAR_EDIT_PATH,
                 CAR_LIST_PATH,
                 CAR_NEW_PATH,

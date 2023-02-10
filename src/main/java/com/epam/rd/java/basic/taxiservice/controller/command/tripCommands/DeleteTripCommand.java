@@ -29,7 +29,7 @@ public class DeleteTripCommand implements ActionCommand {
 
         logger.info("Trip {} was deleted", trip.getId());
 
-        String page = ConfigurationManager.getProperty("path.page.trips.list");
+        String page = ConfigurationManager.getProperty("path.uri.trips.list");
         return new RedirectResult(page);
 
     }
