@@ -56,6 +56,7 @@ public class SaveCarCommand implements ActionCommand {
         CarStatus status = carStatusService.findById(statusId);
         car.setStatus(status);
         car.setLicensePlate(licensePlate);
+        car.setCurrentLocation("vulytsia Balzaka 4");
 
         String driverIdString = request.getParameter("driverId");
         int driverId;

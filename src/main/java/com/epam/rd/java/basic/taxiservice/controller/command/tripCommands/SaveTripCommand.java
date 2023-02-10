@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -99,6 +100,15 @@ public class SaveTripCommand implements ActionCommand {
         BigDecimal price = priceService.calculateTripPrice(trip.getDistance(), user.getSumSpent(), category, trip.getCars().size());
         trip.setPrice(price);
         trip.setOpenTime(new Timestamp(System.currentTimeMillis() / 60000L * 60000L));
+
+        Duration waitingTime = Duration.ofSeconds(cars.stream().
+                mapToLong(car ->
+                        bingMapsService.getRoute(car.getCurrentLocation(),
+                                bingRoute.getStartLocation()).getTravelDuration()).
+                min().
+                getAsLong());
+
+        trip.setWaitingTime(waitingTime);
 
         request.setAttribute("trip", trip);
 

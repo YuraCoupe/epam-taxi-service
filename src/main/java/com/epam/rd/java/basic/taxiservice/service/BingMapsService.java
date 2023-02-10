@@ -31,6 +31,7 @@ public class BingMapsService {
             JSONObject resourseSet = resourseSets.getJSONObject(0);
             JSONObject route = resourseSet.getJSONArray("resources").getJSONObject(0);
             bingRoute.setTravelDistance(route.getDouble("travelDistance"));
+            bingRoute.setTravelDuration(route.getLong("travelDuration"));
             JSONArray routeLegs = route.getJSONArray("routeLegs");
             JSONObject routeLeg = routeLegs.getJSONObject(0);
             JSONObject startLocation = routeLeg.getJSONObject("startLocation");
@@ -65,9 +66,7 @@ public class BingMapsService {
         HttpResponse<String> response = null;
         try {
             response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return response;

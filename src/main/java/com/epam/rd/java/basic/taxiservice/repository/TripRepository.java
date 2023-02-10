@@ -6,6 +6,7 @@ import com.epam.rd.java.basic.taxiservice.model.Car.Car;
 import com.epam.rd.java.basic.taxiservice.model.Car.CarCategory;
 
 import java.sql.*;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +14,9 @@ import java.util.Optional;
 public class TripRepository {
     private static final String INSERT =
             "INSERT INTO trip (person_id, departure_address, destination_address, number_of_passengers, \n" +
-                    "category_id, price, status_id, open_time, distance)\n" +
+                    "category_id, price, status_id, open_time, distance, waiting_time)\n" +
                     "VALUES\n" +
-                    "(?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                    "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String UPDATE =
             "UPDATE trip\n" +
                     "SET\n" +
@@ -28,13 +29,14 @@ public class TripRepository {
                     "status_id = ?,\n" +
                     "open_time = ?,\n" +
                     "close_time = ?,\n" +
-                    "distance = ?\n" +
+                    "distance = ?,\n" +
+                    "waiting_time = ?\n" +
                     "WHERE id = ?;";
     private static final String FIND_ALL =
             "SELECT t.id, t.person_id, p.phone_number AS phone_number, p.first_name AS first_name, \n" +
                     "p.last_name AS last_name, departure_address, destination_address, \n" +
                     "number_of_passengers, \n" +
-                    "category_id, c.title AS category, price, status_id, s.title AS status, open_time, close_time, distance\n" +
+                    "category_id, c.title AS category, price, status_id, s.title AS status, open_time, close_time, distance, waiting_time\n" +
                     "FROM trip t\n" +
                     "JOIN person p ON p.id = t.person_id\n" +
                     "JOIN car_category c ON c.id = category_id\n" +
@@ -44,7 +46,7 @@ public class TripRepository {
             "SELECT t.id, t.person_id, p.phone_number AS phone_number, p.first_name AS first_name, \n" +
                     "p.last_name AS last_name, departure_address, destination_address, \n" +
                     "number_of_passengers, \n" +
-                    "category_id, c.title AS category, price, status_id, s.title AS status, open_time, close_time, distance\n" +
+                    "category_id, c.title AS category, price, status_id, s.title AS status, open_time, close_time, distance, waiting_time\n" +
                     "FROM trip t\n" +
                     "JOIN person p ON p.id = t.person_id\n" +
                     "JOIN car_category c ON c.id = category_id\n" +
@@ -73,7 +75,7 @@ public class TripRepository {
             "SELECT t.id, t.person_id, p.phone_number AS phone_number, p.first_name AS first_name, \n" +
                     "\tp.last_name AS last_name, departure_address, destination_address, \n" +
                     "\tnumber_of_passengers, \n" +
-                    "\tcategory_id, c.title AS category, price, status_id, s.title AS status, open_time, close_time, distance\n" +
+                    "\tcategory_id, c.title AS category, price, status_id, s.title AS status, open_time, close_time, distance, waiting_time\n" +
                     "FROM trip t\n" +
                     "JOIN person p ON p.id = t.person_id\n" +
                     "JOIN car_category c ON c.id = category_id\n" +
@@ -83,7 +85,7 @@ public class TripRepository {
             "SELECT t.id, t.person_id, p.phone_number AS phone_number, p.first_name AS first_name, \n" +
                     "p.last_name AS last_name, departure_address, destination_address, \n" +
                     "number_of_passengers, \n" +
-                    "category_id, c.title AS category, price, status_id, s.title AS status, open_time, close_time, distance\n" +
+                    "category_id, c.title AS category, price, status_id, s.title AS status, open_time, close_time, distance, waiting_time\n" +
                     "FROM trip t\n" +
                     "JOIN person p ON p.id = t.person_id\n" +
                     "JOIN car_category c ON c.id = category_id\n" +
@@ -95,7 +97,7 @@ public class TripRepository {
             "SELECT t.id, t.person_id, p.phone_number AS phone_number, p.first_name AS first_name,\n" +
                     "p.last_name AS last_name, departure_address, destination_address,\n" +
                     "number_of_passengers,\n" +
-                    "t.category_id, c.title AS category, price, t.status_id, s.title AS status, open_time, close_time, distance\n" +
+                    "t.category_id, c.title AS category, price, t.status_id, s.title AS status, open_time, close_time, distance, waiting_time\n" +
                     "FROM trip t\n" +
                     "JOIN person p ON p.id = t.person_id\n" +
                     "JOIN car_category c ON c.id = category_id\n" +
@@ -115,7 +117,7 @@ public class TripRepository {
             "SELECT t.id, t.person_id, p.phone_number AS phone_number, p.first_name AS first_name, \n" +
                     "\tp.last_name AS last_name, departure_address, destination_address, \n" +
                     "\tnumber_of_passengers, \n" +
-                    "\tcategory_id, c.title AS category, price, status_id, s.title AS status, open_time, close_time, distance\n" +
+                    "\tcategory_id, c.title AS category, price, status_id, s.title AS status, open_time, close_time, distance, waiting_time\n" +
                     "FROM trip t\n" +
                     "JOIN person p ON p.id = t.person_id\n" +
                     "JOIN car_category c ON c.id = category_id\n" +
@@ -127,7 +129,7 @@ public class TripRepository {
             "SELECT t.id, t.person_id, p.phone_number AS phone_number, p.first_name AS first_name, \n" +
                     "p.last_name AS last_name, departure_address, destination_address, \n" +
                     "number_of_passengers, \n" +
-                    "t.category_id, c.title AS category, price, t.status_id, s.title AS status, open_time, close_time, distance\n" +
+                    "t.category_id, c.title AS category, price, t.status_id, s.title AS status, open_time, close_time, distance, waiting_time\n" +
                     "FROM trip t\n" +
                     "JOIN person p ON p.id = t.person_id\n" +
                     "JOIN car_category c ON c.id = category_id\n" +
@@ -155,6 +157,7 @@ public class TripRepository {
             preparedStatement.setInt(7, trip.getStatus().getId());
             preparedStatement.setTimestamp(8, trip.getOpenTime());
             preparedStatement.setDouble(9, trip.getDistance());
+            preparedStatement.setLong(10, trip.getWaitingTime().toMillis());
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();
@@ -183,7 +186,8 @@ public class TripRepository {
             preparedStatement.setTimestamp(8, trip.getOpenTime());
             preparedStatement.setObject(9, trip.getCloseTime(), Types.TIMESTAMP);
             preparedStatement.setDouble(10, trip.getDistance());
-            preparedStatement.setInt(11, trip.getId());
+            preparedStatement.setDouble(11, trip.getWaitingTime().toMillis());
+            preparedStatement.setInt(12, trip.getId());
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();
@@ -402,6 +406,7 @@ public class TripRepository {
         trip.setNumberOfPassengers(resultSet.getInt("number_of_passengers"));
         trip.setPrice(resultSet.getBigDecimal("price"));
         trip.setDistance(resultSet.getDouble("distance"));
+        trip.setWaitingTime(Duration.ofMillis(resultSet.getLong("waiting_time")));
         trip.setOpenTime(resultSet.getTimestamp("open_time"));
         return trip;
     }
