@@ -5,6 +5,7 @@ public class BingRoute {
     private String startLocation;
     private String endLocation;
     private Double travelDistance;
+    private Long travelDuration;
     private ErrorMessage errorMessage;
 
     public String getStartLocation() {
@@ -29,6 +30,14 @@ public class BingRoute {
 
     public void setTravelDistance(Double travelDistance) {
         this.travelDistance = travelDistance;
+    }
+
+    public Long getTravelDuration() {
+        return travelDuration;
+    }
+
+    public void setTravelDuration(Long travelDuration) {
+        this.travelDuration = travelDuration;
     }
 
     public Integer getStatusCode() {

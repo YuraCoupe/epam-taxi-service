@@ -267,7 +267,7 @@ public class UserRepository implements BaseRepository {
             while (resultSet.next()) {
                 moneySpent = resultSet.getBigDecimal("total_spent");
             }
-            return moneySpent;
+            return moneySpent != null ? moneySpent : BigDecimal.valueOf(0.0);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

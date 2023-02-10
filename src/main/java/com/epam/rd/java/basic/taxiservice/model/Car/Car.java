@@ -12,6 +12,7 @@ public class Car {
     private String licensePlate;
     private User driver;
     private Trip currentTrip;
+    private String currentLocation;
 
     public Integer getId() {
         return id;
@@ -79,5 +80,13 @@ public class Car {
 
     public void setCurrentTrip(Trip currentTrip) {
         this.currentTrip = currentTrip;
+    }
+
+    public String getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public void setCurrentLocation(String currentLocation) {
+        this.currentLocation = currentLocation;
     }
 }

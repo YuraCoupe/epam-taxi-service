@@ -25,13 +25,18 @@
                                 <a href="/trips/view.do?id=${activeTripId}" type="button" class="btn btn-success"><fmt:message key="label.trip.active"/></a>
                             </c:when>
                             <c:otherwise>
-                                <a href="/trips/new.do" type="button" class="btn btn-primary"><fmt:message key="label.add"/></a>
+                                <c:if test = "${sessionScope.user.role.title == 'ROLE_CLIENT'}">
+                                    <a href="/trips/new.do" type="button" class="btn btn-primary"><fmt:message key="label.add"/></a>
+                                </c:if>
                             </c:otherwise>
                         </c:choose>
                     </div>
                 </div>
             </c:if>
             <hr>
+            <c:choose>
+            <c:when test = "${not empty trips}">
+            <c:if test = "${sessionScope.user.role.title != 'ROLE_DRIVER'}">
             <form action="" class="form-inline" method="POST">
                 <c:if test = "${user.role.title=='ROLE_ADMINISTRATOR'}">
                     <div class="form-group">
@@ -58,6 +63,7 @@
                 </div>
                 <button type="submit" class="btn btn-default"><fmt:message key="label.select"/></button>
             </form>
+            </c:if>
             <hr>
             <table class="table table-hover">
                 <thead>
@@ -166,7 +172,11 @@
             </table>
 
             <ctg:pagination page = "${page}" pageCount = "${pageCount}" />
-
+            </c:when>
+            <c:otherwise>
+            <fmt:message key="label.trips.no.trips"/>
+            </c:otherwise>
+            </c:choose>
         </div>
 
     </body>

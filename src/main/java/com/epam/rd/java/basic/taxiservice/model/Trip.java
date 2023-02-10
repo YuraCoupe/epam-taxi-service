@@ -6,6 +6,7 @@ import com.epam.rd.java.basic.taxiservice.model.Car.CarStatus;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.util.Set;
 
 public class Trip {
@@ -21,6 +22,7 @@ public class Trip {
     private Timestamp closeTime;
     private Set<Car> cars;
     private Double distance;
+    private Duration waitingTime;
 
     public Integer getId() {
         return id;
@@ -116,5 +118,13 @@ public class Trip {
 
     public void setDistance(Double distance) {
         this.distance = distance;
+    }
+
+    public Duration getWaitingTime() {
+        return waitingTime;
+    }
+
+    public void setWaitingTime(Duration waitingTime) {
+        this.waitingTime = waitingTime;
     }
 }

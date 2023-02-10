@@ -33,12 +33,16 @@
                     </div>
                     <div class="card-body">
                         <h5 class="card-title"><fmt:message key="label.trip.confirmed"/></h5>
+                        <c:if test = "${trip.status.title == 'Open'}">
+                            <p class="card-text"><fmt:message key="label.trip.waitingTime"/></p>
+                            <c:out value="${trip.waitingTime.toMinutes()}"/> <fmt:message key="label.trip.time.minutes"/><br><br>
+                        </c:if>
                         <p class="card-text"><fmt:message key="label.trip.departure.address"/></p>
                         <c:out value="${trip.departureAddress}"/><br><br>
                         <p class="card-text"><fmt:message key="label.trip.destination.address"/></p>
                         <c:out value="${trip.destinationAddress}"/><br><br>
                         <p class="card-text"><fmt:message key="label.trip.distance"/></p>
-                        <c:out value="${trip.distance} km"/><br><br>
+                        <c:out value="${trip.distance}"/><fmt:message key="label.trip.distance.kilometers"/><br><br>
                          <p class="card-text"><fmt:message key="label.trip.price"/></p>
                          <c:out value="${trip.price} UAH"/><br><br>
                         <p class="card-text"><fmt:message key="label.trip.category"/></p>

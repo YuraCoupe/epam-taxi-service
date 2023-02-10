@@ -15,9 +15,9 @@ import java.util.Optional;
 
 public class CarRepository {
     private static final String INSERT =
-            "INSERT INTO car (model_id, capacity, category_id, status_id, license_plate, driver_id)\n" +
+            "INSERT INTO car (model_id, capacity, category_id, status_id, license_plate, driver_id, current_location)\n" +
                     "VALUES\n" +
-                    "(?, ?, ?, ?, ?, ?);";
+                    "(?, ?, ?, ?, ?, ?, ?);";
     private static final String UPDATE =
             "UPDATE car\n" +
                     "SET\n" +
@@ -27,14 +27,15 @@ public class CarRepository {
                     "status_id = ?,\n" +
                     "license_plate = ?,\n" +
                     "driver_id = ?,\n" +
-                    "current_trip_id = ?\n" +
+                    "current_trip_id = ?,\n" +
+                    "current_location = ?\n" +
                     "WHERE car.id = ?;";
     private static final String FIND_ALL =
             "SELECT car.id AS id, b.id AS brand_id, b.title AS brand_title, m.id AS model_id, m.title AS model_title,\n" +
                     "car.capacity, c.id AS category_id, c.title AS category_title, s.id AS status_id, \n" +
                     "s.title AS status_title, car.license_plate, car.driver_id as driver_id,\n" +
                     "p.id AS driver_id, p.first_name as driver_first_name, p.last_name AS driver_last_name,\n" +
-                    "car.current_trip_id\n" +
+                    "car.current_trip_id, current_location\n" +
                     "FROM car\n" +
                     "JOIN car_model m ON m.id = car.model_id\n" +
                     "JOIN car_brand b ON b.id = m.brand_id\n" +
@@ -47,7 +48,7 @@ public class CarRepository {
                     "car.capacity, c.id AS category_id, c.title AS category_title, s.id AS status_id, \n" +
                     "s.title AS status_title, car.license_plate, car.driver_id as driver_id,\n" +
                     "p.id AS driver_id, p.first_name as driver_first_name, p.last_name AS driver_last_name,\n" +
-                    "car.current_trip_id\n" +
+                    "car.current_trip_id, current_location\n" +
                     "FROM car\n" +
                     "JOIN car_model m ON m.id = car.model_id\n" +
                     "JOIN car_brand b ON b.id = m.brand_id\n" +
@@ -69,7 +70,7 @@ public class CarRepository {
                     "car.capacity, c.id AS category_id, c.title AS category_title, s.id AS status_id, \n" +
                     "s.title AS status_title, car.license_plate,\n" +
                     "p.id AS driver_id, p.first_name as driver_first_name, p.last_name AS driver_last_name,\n" +
-                    "car.current_trip_id\n" +
+                    "car.current_trip_id, current_location\n" +
                     "FROM car\n" +
                     "JOIN car_model m ON m.id = car.model_id\n" +
                     "JOIN car_brand b ON b.id = m.brand_id\n" +
@@ -82,7 +83,7 @@ public class CarRepository {
                     "car.capacity, c.id AS category_id, c.title AS category_title, s.id AS status_id," +
                     "s.title AS status_title, car.license_plate, " +
                     "p.id AS driver_id, p.first_name as driver_first_name, p.last_name AS driver_last_name,\n" +
-                    "car.current_trip_id\n" +
+                    "car.current_trip_id, current_location\n" +
                     "FROM car" +
                     "JOIN car_model m ON m.id = car.model_id " +
                     "JOIN car_brand b ON b.id = m.brand_id " +
@@ -95,7 +96,7 @@ public class CarRepository {
                     "car.capacity, c.id AS category_id, c.title AS category_title, s.id AS status_id, \n" +
                     "s.title AS status_title, car.license_plate,\n" +
                     "p.id AS driver_id, p.first_name as driver_first_name, p.last_name AS driver_last_name,\n" +
-                    "car.current_trip_id\n" +
+                    "car.current_trip_id, current_location\n" +
                     "FROM car\n" +
                     "JOIN car_model m ON m.id = car.model_id\n" +
                     "JOIN car_brand b ON b.id = m.brand_id\n" +
@@ -110,7 +111,7 @@ public class CarRepository {
                     "car.capacity, c.id AS category_id, c.title AS category_title, s.id AS status_id, \n" +
                     "s.title AS status_title, car.license_plate,\n" +
                     "p.id AS driver_id, p.first_name as driver_first_name, p.last_name AS driver_last_name,\n" +
-                    "car.current_trip_id\n" +
+                    "car.current_trip_id, current_location\n" +
                     "FROM car\n" +
                     "JOIN car_model m ON m.id = car.model_id\n" +
                     "JOIN car_brand b ON b.id = m.brand_id\n" +
@@ -125,7 +126,7 @@ public class CarRepository {
                     "car.capacity, c.id AS category_id, c.title AS category_title, s.id AS status_id,\n" +
                     "s.title AS status_title, car.license_plate,\n" +
                     "p.id AS driver_id, p.first_name as driver_first_name, p.last_name AS driver_last_name,\n" +
-                    "car.current_trip_id\n" +
+                    "car.current_trip_id, current_location\n" +
                     "FROM car\n" +
                     "JOIN car_model m ON m.id = car.model_id\n" +
                     "JOIN car_brand b ON b.id = m.brand_id\n" +
@@ -152,6 +153,7 @@ public class CarRepository {
             preparedStatement.setInt(4, car.getStatus().getId());
             preparedStatement.setString(5, car.getLicensePlate());
             preparedStatement.setObject(6, car.getDriver().getId(), Types.INTEGER);
+            preparedStatement.setString(7, car.getCurrentLocation());
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();
@@ -172,7 +174,8 @@ public class CarRepository {
             preparedStatement.setString(5, car.getLicensePlate());
             preparedStatement.setObject(6, car.getDriver().getId(), Types.INTEGER);
             preparedStatement.setObject(7, car.getCurrentTrip().getId(), Types.INTEGER);
-            preparedStatement.setInt(8, car.getId());
+            preparedStatement.setString(8, car.getCurrentLocation());
+            preparedStatement.setInt(9, car.getId());
             preparedStatement.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -328,6 +331,7 @@ public class CarRepository {
         status.setTitle(resultSet.getString("status_title"));
         car.setStatus(status);
         car.setLicensePlate(resultSet.getString("license_plate"));
+        car.setCurrentLocation(resultSet.getString("current_location"));
 
         int driverId = resultSet.getInt("driver_id");
         if (!resultSet.wasNull()) {

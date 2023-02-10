@@ -44,6 +44,7 @@ public class FinishTripCommand implements ActionCommand {
             if (car.getDriver().getId().equals(userId)) {
                 car.setStatus(carStatus);
                 car.getCurrentTrip().setId(null);
+                car.setCurrentLocation(trip.getDestinationAddress());
                 carService.update(car);
                 logger.info(
                         "Driver {} {} {} finished trip {}",
@@ -56,7 +57,14 @@ public class FinishTripCommand implements ActionCommand {
                         car.getLicensePlate(),
                         car.getModel().getBrand(),
                         car.getModel().getModel(),
-                        carStatus.getTitle());
+                        carStatus.getTitle()
+                );
+                logger.info("Car {} {} {} current location changed to {}",
+                        car.getLicensePlate(),
+                        car.getModel().getBrand(),
+                        car.getModel().getModel(),
+                        car.getCurrentLocation()
+                );
             }
         }
 
